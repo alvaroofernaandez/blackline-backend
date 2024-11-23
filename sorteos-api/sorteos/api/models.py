@@ -1,3 +1,38 @@
-from django.db import models
+import mongoengine as me
+import random
 
-# Create your models here.
+estados_sorteos = ('anunciado', 'activo', 'finalizado')
+
+class Participante(me.Document):
+    instagram_username = me.StringField(required=True)
+    requirements = me.BooleanField(required=True)
+
+    def clean(self):
+        if not self.requirements:
+            raise me.ValidationError("El participante no cumple los requisitos para participar en el sorteo.")
+
+class Sorteo(me.Document):
+    titulo = me.StringField(required=True)
+    descripcion = me.StringField()
+    fecha_inicio = me.DateTimeField(required=True)
+    fecha_fin = me.DateTimeField(required=True)
+    estado = me.StringField(choices=estados_sorteos, default='anunciado')
+    participantes = me.ListField(me.ReferenceField(Participante))
+    ganador = me.ReferenceField(Participante)
+    premios = me.ListField(me.StringField(required=True))
+
+    def clean(self):
+        if self.fecha_inicio >= self.fecha_fin:
+            raise me.ValidationError("La fecha de inicio debe ser anterior a la fecha de fin.")
+
+    def selecGanador(self):
+        if not self.participantes:
+            raise ValueError("No hay participantes en este sorteo")
+        self.ganador = random.choice(self.participantes)
+        self.save()
+
+    def asignarPremio(self, premio):
+        if not isinstance(premio, str):
+            raise ValueError("Debes asignar un premio")
+        self.premios.append(premio)
+        self.save()

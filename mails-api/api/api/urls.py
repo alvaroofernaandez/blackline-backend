@@ -24,3 +24,5 @@ urlpatterns = [
     path('api/register/', UserCreateAPIView.as_view(), name='user_create'),
     path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
 ]
+
+#alejandromoralbermejo@gmail.com

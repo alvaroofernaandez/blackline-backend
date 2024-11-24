@@ -28,13 +28,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-#Api mails configuracion importante exportarlo desde un env (IMPORTANTE ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ALVARO CHUPA PINGAS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'jdeomoya@gmail.com'
-EMAIL_HOST_PASSWORD = 'juandeomoya'
+EMAIL_HOST_PASSWORD = ''
 
 # Application definition
 

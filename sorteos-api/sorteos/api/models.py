@@ -1,9 +1,11 @@
 import mongoengine as me
 import random
 
+from mongoengine import EmbeddedDocumentField
+
 estados_sorteos = ('anunciado', 'activo', 'finalizado')
 
-class Participante(me.Document):
+class Participante(me.EmbeddedDocument):
     instagram_username = me.StringField(required=True)
     requirements = me.BooleanField(required=True)
 
@@ -17,8 +19,8 @@ class Sorteo(me.Document):
     fecha_inicio = me.DateTimeField(required=True)
     fecha_fin = me.DateTimeField(required=True)
     estado = me.StringField(choices=estados_sorteos, default='anunciado')
-    participantes = me.ListField(me.ReferenceField(Participante))
-    ganador = me.ReferenceField(Participante)
+    participantes = me.ListField(EmbeddedDocumentField(Participante), default=[])
+    ganador = me.EmbeddedDocumentField(Participante, null=True)
     premios = me.ListField(me.StringField(required=True))
 
     def clean(self):

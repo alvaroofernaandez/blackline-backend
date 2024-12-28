@@ -37,9 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< Updated upstream
+=======
+    'api',
+    'corsheaders',
+    'rest_framework',
+>>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,6 +55,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4321",  # Tu frontend
 ]
 
 ROOT_URLCONF = 'noticero.urls'
@@ -73,9 +85,14 @@ WSGI_APPLICATION = 'noticero.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.dummy',  # Esto desactiva la base de datos relacional
+        'ENGINE': 'djongo',
+        'NAME': 'noticiero',  # Nombre de tu base de datos en MongoDB
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017',  # Ajusta según tu configuración
+        }
     }
 }
 

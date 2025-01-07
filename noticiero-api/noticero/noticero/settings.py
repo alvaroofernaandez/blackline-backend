@@ -37,12 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< Updated upstream
-=======
     'api',
     'corsheaders',
     'rest_framework',
->>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [

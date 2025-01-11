@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 class Design(models.Model):
-    #image = models.ImageField(upload_to='designs/', blank=False)
     image = models.URLField(blank=False)
     titulo = models.CharField(blank=False, max_length=150)
     descripcion = models.CharField(blank=False, max_length=500)

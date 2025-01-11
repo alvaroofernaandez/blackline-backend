@@ -25,3 +25,5 @@ urlpatterns = [
     path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
     path('api/send-single-email/', SendSingleEmailAPIView.as_view(), name='send_single_email'),
 ]
+]
+

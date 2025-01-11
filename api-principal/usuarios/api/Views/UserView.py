@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from ..Models.UserModel import Usuario
-from ..DTO.UserDTO import UsuarioSerializer
+from ..Serializers.UserSerializer import UsuarioSerializer
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 
@@ -54,7 +54,7 @@ class UserViewSet(viewsets.ModelViewSet):
     # Metodo para modificar un usuario
     @action(detail=False, methods=['put'])
     def modificar_User(self,request):
-        # Campo obligatorio
+        # Campo obligatorioDTO.UserDTO
         id_usuario = request.data.get('id_usuario')
 
         if not id_usuario:

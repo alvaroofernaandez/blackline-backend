@@ -8,12 +8,78 @@ from django.core.mail import send_mail
 from .UserSerializer import UserSerializer
 from .utils import send_email_users_where_allowed
 
+class SendSingleEmailAPIView(APIView):
+    def post(self, request):
+        correo = request.data.get("correo")
+        asunto = request.data.get("asunto")
+        mensaje = request.data.get("mensaje")
+
+        if not correo or not asunto or not mensaje:
+            return Response(
+                {"error": "Por favor, proporciona correo, asunto y mensaje."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            if not User.objects.filter(email=correo).exists():
+                return Response(
+                    {"error": f"No existe un usuario registrado con el correo: {correo}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            send_mail(
+                subject=asunto,
+                message=mensaje,
+                from_email="jdeomoya@gmail.com",
+                recipient_list=[correo],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Correo enviado exitosamente!"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": f"Error al enviar el correo: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 class SendEmailsAPIView(APIView):
     def post(self, request):
+        # Recibir los datos desde el cuerpo de la solicitud.
+        asunto = request.data.get("asunto")
+        mensaje = request.data.get("mensaje")
+
+        # Validar que los campos sean proporcionados
+        if not asunto or not mensaje:
+            return Response(
+                {"error": "Por favor, proporciona un asunto y un mensaje."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         try:
-            send_email_users_where_allowed()  # Llama a la función para enviar correos
-            return Response({"message": "Correos enviados exitosamente."}, status=status.HTTP_200_OK)
+            usuarios = User.objects.filter(can_receive_emails=True)
+
+            if not usuarios.exists():
+                return Response(
+                    {"error": "No hay usuarios que puedan recibir correos."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            correos_destinatarios = usuarios.values_list('email', flat=True)
+
+            send_mail(
+                subject=asunto,
+                message=mensaje,
+                from_email="jdeomoya@gmail.com",
+                recipient_list=correos_destinatarios,
+                fail_silently=False,
+            )
+
+            return Response({"message": "Correos enviados exitosamente!"}, status=status.HTTP_200_OK)
         except Exception as e:
+            return Response(
+                {"error": f"Error al enviar los correos: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     @action(detail=False, methods=['POST'])
     def send_personalized_email(self,request):

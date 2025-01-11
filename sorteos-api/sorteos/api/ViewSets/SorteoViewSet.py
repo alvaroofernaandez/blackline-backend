@@ -20,11 +20,12 @@ class SorteoViewSet(APIView):
                 "ganador": str(s.ganador.id) if s.ganador else None,
                 "premios": s.premios,
                 "participantes": [
-                    {"id": str(p.id), "instagram_username": p.instagram_username}
+                    {"instagram_username": p.instagram_username}
                     for p in s.participantes
                 ]
             } for s in sorteos
         ]
+        # "id": str(p.id),
         return Response(msgData, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -65,7 +66,7 @@ class SorteoViewSet(APIView):
                 sorteo.selecGanador()
                 sorteo.estado="finalizado"
                 sorteo.save()
-                return Response({"message": "Ganador seleccionado correctamente", "ganador": str(sorteo.ganador.id)}, status=status.HTTP_200_OK)
+                return Response({"message": "Ganador seleccionado correctamente", "ganador": str(sorteo.ganador.instagram_username)}, status=status.HTTP_200_OK)
 
             elif action == "asignar_premio":
                 premio = request.data.get("premio")

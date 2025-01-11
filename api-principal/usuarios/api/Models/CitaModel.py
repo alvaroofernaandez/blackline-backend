@@ -8,7 +8,6 @@ from DiseñoModel import Design
 class Cita(models.Model):
     solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='citas')
     design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='citas',
-                               verbose_name="Diseño asociado")
     fecha = models.DateField(verbose_name="Fecha de la cita")
     hora = models.TimeField(verbose_name="Hora de la cita")
     estado = models.CharField(

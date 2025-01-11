@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users.views import UserCreateAPIView
-from users.views import SendEmailsAPIView
+from users.views import SendEmailsAPIView, SendSingleEmailAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register/', UserCreateAPIView.as_view(), name='user_create'),
     path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
+    path('api/send-single-email/', SendSingleEmailAPIView.as_view(), name='send_single_email'),
 ]

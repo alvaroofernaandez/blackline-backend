@@ -8,6 +8,46 @@ from django.core.mail import send_mail
 from .UserSerializer import UserSerializer
 from .utils import send_email_users_where_allowed
 
+class SendSingleEmailAPIView(APIView):
+    def post(self, request):
+        """
+        Endpoint para enviar un correo personalizado a un usuario específico.
+        """
+        # Recibir los datos desde el cuerpo de la solicitud.
+        correo = request.data.get("correo")
+        asunto = request.data.get("asunto")
+        mensaje = request.data.get("mensaje")
+
+        # Validar que todos los campos sean proporcionados
+        if not correo or not asunto or not mensaje:
+            return Response(
+                {"error": "Por favor, proporciona correo, asunto y mensaje."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # Verificar que el usuario con el correo proporcionado existe en la base de datos.
+            if not User.objects.filter(email=correo).exists():
+                return Response(
+                    {"error": f"No existe un usuario registrado con el correo: {correo}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            # Enviar el correo
+            send_mail(
+                subject=asunto,
+                message=mensaje,
+                from_email="jdeomoya@gmail.com",  # Aquí va el correo que enviará los mensajes.
+                recipient_list=[correo],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Correo enviado exitosamente!"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": f"Error al enviar el correo: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 class SendEmailsAPIView(APIView):
     def post(self, request):
         try:

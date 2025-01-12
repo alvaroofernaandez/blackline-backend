@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'usuarios.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'maez-ink-tfg',
+        'NAME': 'maez_ink_tfg',
         'USER': 'root',
         'PASSWORD': 'admin',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3310',
     }
 }
 

@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view
 @api_view(['GET', 'POST'])
 def route_request(request, service_name):
 
-    service_map = {
+    # Definimos el diccionario con los endpoints. Más tarde tendremos que pasar los endpoints a un .env
+    servicios = {
         'GET': {
             'service1/': 'http://localhost:8001/api/usuarios/',
             'service2/': 'http://localhost:8002/noticias/',
@@ -15,35 +16,39 @@ def route_request(request, service_name):
         },
     }
 
-    method = request.method.upper()
-    print(f"Method: {method}, Service Name: {service_name}")  # Registro adicional
+    # Obtenemos el tipo de metodo y lo pasamos a mayusculas
+    metodo = obtener_metodo(request)
 
-    if method in service_map:
-        for route_prefix, service_url in service_map[method].items():
-            if service_name.startswith(route_prefix):
-                target_url = service_url
-                print(f"Redirigiendo a: {target_url}")
+    # Comprobamos si el metodo se encuentra o no en el diccionario que incluye el tipo de metodo
+    if metodo not in servicios:
+        return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'},
+                            status=404)
 
+    for url_gateway, url_final in servicios[metodo].items():
+        if service_name.startswith(url_gateway):
+            target_url = url_final
+
+            try:
+                response = requests.request(
+                    method=request.method,
+                    url=target_url,
+                    headers={key: value for key, value in request.headers.items() if key != 'Host'},
+                    data=request.body,
+                    params=request.GET.dict()
+                )
                 try:
-                    response = requests.request(
-                        method=request.method,
-                        url=target_url,
-                        headers={key: value for key, value in request.headers.items() if key != 'Host'},
-                        data=request.body,
-                        params=request.GET.dict()
-                    )
+                    json_response = response.json()
+                except ValueError:
+                    return JsonResponse({'error': 'Respuesta inválida desde el microservicio.'}, status=500)
 
-                    print(f"Microservicio Respondió: {response.status_code}")
+                return JsonResponse(json_response, status=response.status_code, safe=False)
 
-                    try:
-                        json_response = response.json()
-                    except ValueError:
-                        return JsonResponse({'error': 'Respuesta inválida desde el microservicio.'}, status=500)
+            except requests.exceptions.RequestException as e:
+                return JsonResponse({'error': f'Error al conectar con el microservicio: {str(e)}'}, status=500)
 
-                    # Modificación aquí
-                    return JsonResponse(json_response, status=response.status_code, safe=False)
-
-                except requests.exceptions.RequestException as e:
-                    return JsonResponse({'error': f'Error al conectar con el microservicio: {str(e)}'}, status=500)
-
+    # Si surge algun fallo en la ruta devolvemos los siguiente
     return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'}, status=404)
+
+
+def obtener_metodo(request):
+    return request.method.upper()

@@ -13,3 +13,4 @@ setuptools==75.6.0
 sqlparse==0.2.4
 tzdata==2024.2
 mysqlclient
+requests

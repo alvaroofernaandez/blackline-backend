@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from .UserSerializer import UserSerializer
 from .utils import send_email_users_where_allowed
 
+
 class SendSingleEmailAPIView(APIView):
     def post(self, request):
         correo = request.data.get("correo")

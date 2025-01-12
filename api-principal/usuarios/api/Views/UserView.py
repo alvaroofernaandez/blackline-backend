@@ -13,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     # Metodo para añadir un usuario
     @action(detail=False, methods=['post'])
-    def anadir_User(self, request):
+    def registrar_User(self, request):
         # Diccionario con los datos de el usuario
         contenido = {
             'nombre': str(request.data.get('nombre', '')),

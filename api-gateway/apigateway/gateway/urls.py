@@ -1,8 +1,7 @@
-"""
-URL configuration for api project.
+"""gateway URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -16,12 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import UserCreateAPIView
-from users.views import SendEmailsAPIView, SendSingleEmailAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/', UserCreateAPIView.as_view(), name='user_create'),
-    path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
-    path('api/send-single-email/', SendSingleEmailAPIView.as_view(), name='send_single_email'),
 ]

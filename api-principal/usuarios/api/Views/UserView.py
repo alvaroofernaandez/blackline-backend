@@ -52,6 +52,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": f"Error al crear el usuario: {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
+
     # Metodo para modificar un usuario
     @action(detail=False, methods=['put'])
     def modificar_User(self,request):
@@ -154,3 +155,5 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # Devolvemos los usuarios por orden de llegada de más antiguo a más reciente
         return Response({"usuarios": serializer.data}, status=status.HTTP_200_OK)
+
+

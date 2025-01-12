@@ -11,7 +11,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),  # Incluimos las rutas generadas por el router
     path('api/', include('api.urls')),  # Incluimos las rutas adicionales definidas en api/urls.py
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Incluimos las rutas generadas por el router
 ]

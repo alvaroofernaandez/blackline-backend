@@ -4,7 +4,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from ..Models.UserModel import Usuario
 from ..Serializers.UserSerializer import UsuarioSerializer
-from ..DTO.UserDTO import UsuarioSerializer
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 

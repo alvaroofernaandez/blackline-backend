@@ -7,6 +7,7 @@ class Design(models.Model):
     descripcion = models.CharField(blank=False, max_length=500)
     precio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
+
     def clean(self):
         if self.precio < 0:
             raise ValidationError("El precio estimado no puede ser negativo.")

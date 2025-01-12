@@ -1,8 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
-from UserModel import Usuario
-from DiseñoModel import Design
+from ..Models.UserModel import Usuario
+from ..Models.DiseñoModel import Design
 
 
 class Cita(models.Model):

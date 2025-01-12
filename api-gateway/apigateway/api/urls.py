@@ -7,5 +7,5 @@ from . import views
     lo que ha introducido el usuario
 '''
 urlpatterns = [
-    re_path(r'^(?P<service_name>service[12]/.*)$', views.route_request, name='route_request'),
+    re_path(r'^(?P<service_name>[\w-]+)/?$', views.route_request, name='route_request')
 ]

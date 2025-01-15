@@ -10,6 +10,7 @@ def route_request(request, service_name):
         'GET': {
             'usuarios': 'http://localhost:8001/api/usuarios/',
             'noticias': 'http://localhost:8002/noticias/',
+            'sorteos' : 'http://localhost:8003/api/sorteos/',
         },
         'POST': {
             'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',

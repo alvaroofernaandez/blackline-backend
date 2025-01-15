@@ -17,7 +17,7 @@ class SorteoViewSet(APIView):
                 "fecha_inicio": s.fecha_inicio,
                 "fecha_fin": s.fecha_fin,
                 "estado": s.estado,
-                "ganador": str(s.ganador.id) if s.ganador else None,
+                "ganador": str(s.ganador.instagram_username) if s.ganador else None,
                 "premios": s.premios,
                 "participantes": [
                     {"instagram_username": p.instagram_username}

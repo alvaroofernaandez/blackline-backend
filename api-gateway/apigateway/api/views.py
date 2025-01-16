@@ -5,16 +5,42 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET', 'POST'])
 def route_request(request, service_name):
-    # Definimos el diccionario con los endpoints. Más tarde tendremos que pasar los endpoints a un .env
+    # Definimos el diccionario con los endpoints. Más tarde se recomienda pasarlos a un archivo .env para mejor gestión
     servicios = {
         'GET': {
-            'usuarios': 'http://localhost:8001/api/usuarios/',
-            'noticias': 'http://localhost:8002/noticias/',
-            'sorteos' : 'http://localhost:8003/api/sorteos/',
+            'usuarios': 'http://localhost:8000/usuarios/',
+            'diseños': 'http://localhost:8000/diseños/',
+            'diseño_por_id': 'http://localhost:8000/diseños/{id}/',
+            'citas': 'http://localhost:8000/citas/',
+            'noticias': 'http://localhost:8002/noticias/',  # Noticiero en puerto 8002
+            'noticia_por_id': 'http://localhost:8002/noticias/{id}/',
+            'sorteos': 'http://localhost:8003/api/sorteos/',
+            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
         },
         'POST': {
+            'diseños': 'http://localhost:8000/diseños/',
+            'citas': 'http://localhost:8000/citas/',
             'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
+            'noticias': 'http://localhost:8002/noticias/',
+            'sorteos': 'http://localhost:8003/api/sorteos/',
+            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
         },
+        'PUT': {
+            'usuarios': 'http://localhost:8000/usuarios/{id}/',
+            'diseños': 'http://localhost:8000/diseños/{id}/',
+            'noticias': 'http://localhost:8002/noticias/{id}/',
+            'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',
+        },
+        'PATCH': {
+            'sorteos_seleccionar_ganador': 'http://localhost:8003/api/sorteos/{sorteo_id}/seleccionar_ganador/',
+            'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{sorteo_id}/asignar_premio/',
+        },
+        'DELETE': {
+            'usuarios': 'http://localhost:8000/usuarios/{id}/',
+            'diseños': 'http://localhost:8000/diseños/{id}/',
+            'noticias': 'http://localhost:8002/noticias/{id}/',
+            'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',
+        }
     }
 
     metodo = obtener_metodo(request)

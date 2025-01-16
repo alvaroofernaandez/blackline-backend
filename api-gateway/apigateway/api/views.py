@@ -2,32 +2,22 @@ import requests
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def route_request(request, service_name):
-    # Definimos el diccionario con los endpoints. Más tarde se recomienda pasarlos a un archivo .env para mejor gestión
     servicios = {
         'GET': {
-            'usuarios': 'http://localhost:8000/usuarios/',
-            'diseños': 'http://localhost:8000/diseños/',
-            'diseño_por_id': 'http://localhost:8000/diseños/{id}/',
-            'citas': 'http://localhost:8000/citas/',
-            'noticias': 'http://localhost:8002/noticias/',  # Noticiero en puerto 8002
-            'noticia_por_id': 'http://localhost:8002/noticias/{id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/',
-            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
-        },
-        'POST': {
-            'diseños': 'http://localhost:8000/diseños/',
-            'citas': 'http://localhost:8000/citas/',
-            'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
+            'usuarios': 'http://localhost:8001/api/usuarios/',
+            'diseños': 'http://localhost:8001/api/diseños/',
             'noticias': 'http://localhost:8002/noticias/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
             'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
         },
+        'POST': {
+            'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
+            'sorteos': 'http://localhost:8003/api/sorteos/',
+            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
+        },
         'PUT': {
-            'usuarios': 'http://localhost:8000/usuarios/{id}/',
-            'diseños': 'http://localhost:8000/diseños/{id}/',
             'noticias': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',
         },
@@ -36,36 +26,42 @@ def route_request(request, service_name):
             'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{sorteo_id}/asignar_premio/',
         },
         'DELETE': {
-            'usuarios': 'http://localhost:8000/usuarios/{id}/',
-            'diseños': 'http://localhost:8000/diseños/{id}/',
             'noticias': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',
         }
     }
 
-    metodo = obtener_metodo(request)
+    metodo = request.method.upper()
 
     if metodo not in servicios or service_name not in servicios[metodo]:
         return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'}, status=404)
 
-    # La url objetivo será la de que corresponda a el diccionario servicios
     url_final = servicios[metodo][service_name]
 
-    # Devolvemos una respuesta con todos los datos de la url o endpoint
+    url_final = url_final.format(
+        id=request.GET.get('id', ''),
+        sorteo_id=request.GET.get('sorteo_id', '')
+    )
+
+    # Preparar encabezados
+    headers = {
+        'Authorization': request.headers.get('Authorization', ''),
+        'Content-Type': 'application/json'
+    }
+
+    # Hacer la petición al microservicio
     try:
         response = requests.request(
             method=metodo,
             url=url_final,
-            headers={key: value for key, value in request.headers.items() if key != 'Host'},
+            headers=headers,
             data=request.body,
             params=request.GET.dict()
         )
-        return JsonResponse(response.json(), status=response.status_code, safe=False)
+        try:
+            return JsonResponse(response.json(), status=response.status_code, safe=False)
+        except ValueError:
+            return JsonResponse({'error': 'Respuesta no es un JSON válido.'}, status=500)
 
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': f'Error al conectar con el microservicio: {str(e)}'}, status=500)
-
-
-# Metodo para devolver el metodo utilizado y pasado a mayúsculas
-def obtener_metodo(request):
-    return request.method.upper()

@@ -2,14 +2,15 @@ from django.contrib.sites import requests
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from ..Models.UserModel import Usuario
+from ..models import User
 from ..Serializers.UserSerializer import UsuarioSerializer
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = Usuario.objects.all()
+    queryset = User.objects.all()
     serializer_class = UsuarioSerializer
+
 
     # Metodo para añadir un usuario
     @action(detail=False, methods=['post'])
@@ -35,13 +36,13 @@ class UserViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
 
         # Comprobamos si el email está duplicado
-        if Usuario.objects.filter(email=contenido['email']).exists():
+        if User.objects.filter(email=contenido['email']).exists():
             return Response({"error": "El email ya existe. Pruebe con otro."},
                             status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Creamos el usuario con el diccionario que he creado al principio
-            usuario = Usuario.objects.create(**contenido)
+            usuario = User.objects.create(**contenido)
 
             # Muestro un mensaje con el id de el usuario y el codigo de creacion 201
             return Response({"mensaje": f"El usuario con el id {usuario.pk} ha sido añadido correctamente"},
@@ -65,8 +66,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # Ahora comprobamos que el usuario si existe el usuario en la bbdd
         try:
-            usuario = Usuario.objects.get(id=id_usuario)
-        except Usuario.DoesNotExist:
+            usuario = User.objects.get(id=id_usuario)
+        except User.DoesNotExist:
             return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
         # Obtenemos los datos que ha introducido el usuario
@@ -106,14 +107,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
         try:
             # Obtenemos a el usuario
-            usuario = Usuario.objects.get(id=id_usuario)
+            usuario = User.objects.get(id=id_usuario)
 
             # Eliminamos a el usuario
             usuario.delete()
 
             return Response({"mensaje": f"El usuario con el id {id_usuario} ha sido correctamente eliminado"},
                             status=status.HTTP_200_OK)
-        except Usuario.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"error": f"El usuario con el id {id_usuario} no existe"},
                             status=status.HTTP_404_NOT_FOUND)
 
@@ -130,13 +131,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         try:
             # Buscamos a el usuario y devolvemos el json que corresponde a ese usuario
-            usuario = Usuario.objects.get(id=id_usuario)
+            usuario = User.objects.get(id=id_usuario)
 
             serializer = UsuarioSerializer(usuario)
 
             return Response({"usuario": serializer.data}, status=status.HTTP_200_OK)
 
-        except Usuario.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"error": f"El usuario con el id {id_usuario} no existe"},
                             status=status.HTTP_404_NOT_FOUND)
 
@@ -147,12 +148,10 @@ class UserViewSet(viewsets.ModelViewSet):
         limite_usuarios = int(request.query_params.get('limit', 5))
 
         # Filtramos por la fecha de usuarios
-        usuarios = Usuario.objects.all().order_by('fecha_registro')[:limite_usuarios]
+        usuarios = User.objects.all().order_by('fecha_registro')[:limite_usuarios]
 
         # Serializamos los datos
         serializer = UsuarioSerializer(usuarios, many=True)
 
         # Devolvemos los usuarios por orden de llegada de más antiguo a más reciente
         return Response({"usuarios": serializer.data}, status=status.HTTP_200_OK)
-
-

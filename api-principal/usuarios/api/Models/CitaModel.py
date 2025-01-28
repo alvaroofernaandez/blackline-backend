@@ -1,12 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
-from ..Models.UserModel import Usuario
+from ..models import User
 from ..Models.DiseñoModel import Design
 
 
 class Cita(models.Model):
-    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='citas')
+    solicitante = models.ForeignKey(User, on_delete=models.CASCADE, related_name='citas')
     design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='citas'),
     fecha = models.DateField(verbose_name="Fecha de la cita")
     hora = models.TimeField(verbose_name="Hora de la cita")

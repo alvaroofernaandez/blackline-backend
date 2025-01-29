@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..Models.UserModel import Usuario
+from ..models import User
 from django.core.exceptions import ValidationError
 
 
@@ -12,7 +12,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        if Usuario.objects.filter(email=data['email']).exists():
+        if User.objects.filter(email=data['email']).exists():
             raise ValidationError("El email ya existe. Pruebe con otro.")
 
         data['email'] = self.comprobarEmail(data['email'])
@@ -20,5 +20,5 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return data
 
     class Meta:
-        model = Usuario
-        fields = '__all__'
+        model = User
+        fields = ['id','username','email','role']

@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -29,6 +28,7 @@ ALLOWED_HOSTS = []
 
 APPEND_SLASH = False
 
+# Aqui dejo registrado el modelo de usuario que se va a utilizar en este caso el que se encuentra en models.py
 AUTH_USER_MODEL = 'api.User'
 
 # Application definition
@@ -88,9 +88,6 @@ DATABASES = {
         'PORT': '3311',
     }
 }
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

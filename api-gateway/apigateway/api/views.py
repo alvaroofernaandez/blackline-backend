@@ -17,6 +17,7 @@ def route_request(request, service_name, sorteo_id=None):
         },
         'POST': {
             'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
+            'noticias': 'http://localhost:8002/noticias/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
             'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
         },

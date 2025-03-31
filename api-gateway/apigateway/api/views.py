@@ -4,33 +4,33 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
-def route_request(request, service_name, sorteo_id=None):
+def route_request(request, service_name, id=None):
     # Definir las rutas de los microservicios
     servicios = {
         'GET': {
             'usuarios': 'http://localhost:8001/api/usuarios/',
             'diseños': 'http://localhost:8001/api/diseños/',
             'noticias': 'http://localhost:8002/noticias/',
-            'noticias_por_id': 'http://localhost:8002/noticias/{sorteo_id}/',
+            'noticias_por_id': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
-            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
+            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{id}/participantes/',
         },
         'POST': {
             'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
-            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{sorteo_id}/participantes/',
+            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{id}/participantes/',
         },
         'PUT': {
-            'noticias': 'http://localhost:8002/noticias/{sorteo_id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',  # Usar {sorteo_id} dinámicamente
+            'noticias': 'http://localhost:8002/noticias/{id}/',
+            'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
         },
         'PATCH': {
-            'sorteos_seleccionar_ganador': 'http://localhost:8003/api/sorteos/{sorteo_id}/seleccionar_ganador/',
-            'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{sorteo_id}/asignar_premio/',
+            'sorteos_seleccionar_ganador': 'http://localhost:8003/api/sorteos/{id}/seleccionar_ganador/',
+            'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{id}/asignar_premio/',
         },
         'DELETE': {
-            'noticias': 'http://localhost:8002/noticias/{sorteo_id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/{sorteo_id}/',
+            'noticias': 'http://localhost:8002/noticias/{id}/',
+            'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
         }
     }
 
@@ -43,13 +43,13 @@ def route_request(request, service_name, sorteo_id=None):
     # Obtener la URL base correspondiente al servicio
     url_final = servicios[metodo][service_name]
 
-    # Si es PUT, PATCH o DELETE, asegúrate de que 'sorteo_id' está presente
-    if '{sorteo_id}' in url_final and not sorteo_id:
-        return JsonResponse({'error': 'Se requiere un sorteo_id en la solicitud.'}, status=400)
+    # Si es PUT, PATCH o DELETE, asegúrate de que 'id' está presente
+    if '{id}' in url_final and not id:
+        return JsonResponse({'error': 'Se requiere un id en la solicitud.'}, status=400)
 
-    # Reemplazar 'sorteo_id' en la URL final
-    if sorteo_id:
-        url_final = url_final.format(sorteo_id=sorteo_id)
+    # Reemplazar 'id' en la URL final
+    if id:
+        url_final = url_final.format(id=id)
 
     # Preparar encabezados
     headers = {

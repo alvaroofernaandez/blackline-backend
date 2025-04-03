@@ -9,7 +9,12 @@ def route_request(request, service_name, id=None):
     servicios = {
         'GET': {
             'usuarios': 'http://localhost:8001/api/usuarios/',
+            'usuario_por_id': 'http://localhost:8001/api/usuarios/buscar_User/?id_usuario={id}',
+            'usuarios_antiguos': 'http://localhost:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
             'diseños': 'http://localhost:8001/api/diseños/',
+            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
+            'citas': 'http://localhost:8001/api/citas/',
+            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
             'noticias': 'http://localhost:8002/noticias/',
             'noticias_por_id': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
@@ -17,11 +22,18 @@ def route_request(request, service_name, id=None):
         },
         'POST': {
             'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
+            'diseños': 'http://localhost:8001/api/diseños/',
+            'citas': 'http://localhost:8001/api/citas/',
             'noticias': 'http://localhost:8002/noticias/',
             'sorteos': 'http://localhost:8003/api/sorteos/',
             'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{id}/participantes/',
+            'token': 'http://localhost:8001/api/token/',
+            'token_refresh': 'http://localhost:8001/api/token/refresh/',
         },
         'PUT': {
+            'usuarios': 'http://localhost:8001/api/usuarios/modificar_User/',
+            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
+            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
             'noticias': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
         },
@@ -30,6 +42,9 @@ def route_request(request, service_name, id=None):
             'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{id}/asignar_premio/',
         },
         'DELETE': {
+            'usuarios': 'http://localhost:8001/api/usuarios/eliminar_User/?id_usuario={id}',
+            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
+            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
             'noticias': 'http://localhost:8002/noticias/{id}/',
             'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
         }

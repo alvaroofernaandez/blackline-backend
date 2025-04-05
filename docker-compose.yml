@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api-gateway:
-    build: ./api-gateway  # Asegúrate de que el Dockerfile esté dentro de ./api-gateway
+    build: ./api-gateway
     ports:
       - "8000:8000"
     depends_on:
@@ -19,7 +19,7 @@ services:
       - "8001:8001"
     environment:
       - DB_HOST=mysql
-      - DB_PORT=3306  # Puerto interno de MySQL en el contenedor
+      - DB_PORT=3306
       - DB_NAME=principal_db
       - DB_USER=root
       - DB_PASSWORD=root_password
@@ -29,12 +29,7 @@ services:
       - backend_network
     volumes:
       - ./api-principal:/app
-    command: >
-      sh -c "
-        python manage.py makemigrations &&
-        python manage.py migrate &&
-        python manage.py runserver 0.0.0.0:8001
-      "
+
 
   noticiero-api:
     build: ./noticiero-api
@@ -68,11 +63,12 @@ services:
     image: mysql:5.7
     restart: always
     ports:
-      - "3307:3306"  # Exponemos el puerto 3307 para evitar conflictos
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - backend_network
 

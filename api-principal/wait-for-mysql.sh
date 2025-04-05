@@ -1,9 +1,10 @@
 #!/bin/bash
-echo "Esperando a que MySQL esté disponible..."
-
-while ! nc -z mysql 3306; do
-  sleep 1
+# Espera hasta que MySQL esté disponible
+while ! mysqladmin ping -h"mysql" --silent; do
+  echo "Esperando a que MySQL esté disponible..."
+  sleep 2
 done
 
-echo "MySQL está disponible. Arrancando servidor Django..."
-exec "$@"
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8001

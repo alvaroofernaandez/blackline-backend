@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway  # Asegúrate de que el Dockerfile esté dentro de ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - api-principal
+      - noticiero-api
+      - sorteos-api
+    networks:
+      - backend_network
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  api-principal:
+    build: ./api-principal
+    ports:
+      - "8001:8001"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306  # Puerto interno de MySQL en el contenedor
+      - DB_NAME=principal_db
+      - DB_USER=root
+      - DB_PASSWORD=root_password
+    depends_on:
+      - mysql
+    networks:
+      - backend_network
+    volumes:
+      - ./api-principal:/app
+    command: >
+      sh -c "
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8001
+      "
+
+  noticiero-api:
+    build: ./noticiero-api
+    ports:
+      - "8002:8002"
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=noticiero_db
+    depends_on:
+      - mongodb
+    networks:
+      - backend_network
+    command: python manage.py runserver 0.0.0.0:8002
+
+  sorteos-api:
+    build: ./sorteos-api
+    ports:
+      - "8003:8003"
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=sorteos_db
+    depends_on:
+      - mongodb
+    networks:
+      - backend_network
+    command: python manage.py runserver 0.0.0.0:8003
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "3307:3306"  # Exponemos el puerto 3307 para evitar conflictos
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend_network
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend_network
+
+volumes:
+  mysql_data:
+  mongodb_data:
+
+networks:
+  backend_network:
+    driver: bridge

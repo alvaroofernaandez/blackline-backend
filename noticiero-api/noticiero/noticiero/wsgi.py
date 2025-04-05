@@ -1,5 +1,5 @@
 """
-WSGI config for noticero project.
+WSGI config for noticiero project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'noticero.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'noticiero.settings')
 
 application = get_wsgi_application()

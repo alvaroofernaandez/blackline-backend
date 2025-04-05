@@ -88,7 +88,13 @@ DATABASES = {
     }
 }
 
-connect('sorteos', host='localhost', port=27017)
+from mongoengine import connect
+connect(
+    db='sorteos_db',
+    host='mongodb',
+    port=27017
+)
+
 
 print("Conexión exitosa")
 
@@ -132,3 +138,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['sorteos-api', 'localhost', '127.0.0.1', '0.0.0.0']

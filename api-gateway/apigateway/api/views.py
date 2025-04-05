@@ -6,47 +6,50 @@ from rest_framework.decorators import api_view
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def route_request(request, service_name, id=None):
     # Definir las rutas de los microservicios
+    # Definir las rutas de los microservicios
     servicios = {
         'GET': {
-            'usuarios': 'http://localhost:8001/api/usuarios/',
-            'usuario_por_id': 'http://localhost:8001/api/usuarios/buscar_User/?id_usuario={id}',
-            'usuarios_antiguos': 'http://localhost:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
-            'diseños': 'http://localhost:8001/api/diseños/',
-            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
-            'citas': 'http://localhost:8001/api/citas/',
-            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
-            'noticias': 'http://localhost:8002/noticias/',
-            'noticias_por_id': 'http://localhost:8002/noticias/{id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/',
-            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{id}/participantes/',
+            'usuarios': 'http://api-principal:8001/api/usuarios/',  # Cambio aquí
+            'usuario_por_id': 'http://api-principal:8001/api/usuarios/buscar_User/?id_usuario={id}',  # Cambio aquí
+            'usuarios_antiguos': 'http://api-principal:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
+            # Cambio aquí
+            'diseños': 'http://api-principal:8001/api/diseños/',  # Cambio aquí
+            'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',  # Cambio aquí
+            'citas': 'http://api-principal:8001/api/citas/',  # Cambio aquí
+            'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',  # Cambio aquí
+            'noticias': 'http://noticiero-api:8002/noticias/',  # Cambio aquí
+            'noticias_por_id': 'http://noticiero-api:8002/noticias/{id}/',  # Cambio aquí
+            'sorteos': 'http://sorteos-api:8003/api/sorteos/',  # Cambio aquí
+            'participantes_por_sorteo': 'http://sorteos-api:8003/api/sorteos/{id}/participantes/',  # Cambio aquí
         },
         'POST': {
-            'usuarios': 'http://localhost:8001/api/usuarios/registrar_User/',
-            'diseños': 'http://localhost:8001/api/diseños/',
-            'citas': 'http://localhost:8001/api/citas/',
-            'noticias': 'http://localhost:8002/noticias/',
-            'sorteos': 'http://localhost:8003/api/sorteos/',
-            'participantes_por_sorteo': 'http://localhost:8003/api/sorteos/{id}/participantes/',
-            'token': 'http://localhost:8001/api/token/',
-            'token_refresh': 'http://localhost:8001/api/token/refresh/',
+            'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',  # Cambio aquí
+            'diseños': 'http://api-principal:8001/api/diseños/',  # Cambio aquí
+            'citas': 'http://api-principal:8001/api/citas/',  # Cambio aquí
+            'noticias': 'http://noticiero-api:8002/noticias/',  # Cambio aquí
+            'sorteos': 'http://sorteos-api:8003/api/sorteos/',  # Cambio aquí
+            'participantes_por_sorteo': 'http://sorteos-api:8003/api/sorteos/{id}/participantes/',  # Cambio aquí
+            'token': 'http://api-principal:8001/api/token/',  # Cambio aquí
+            'token_refresh': 'http://api-principal:8001/api/token/refresh/',  # Cambio aquí
         },
         'PUT': {
-            'usuarios': 'http://localhost:8001/api/usuarios/modificar_User/',
-            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
-            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
-            'noticias': 'http://localhost:8002/noticias/{id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
+            'usuarios': 'http://api-principal:8001/api/usuarios/modificar_User/',  # Cambio aquí
+            'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',  # Cambio aquí
+            'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',  # Cambio aquí
+            'noticias': 'http://noticiero-api:8002/noticias/{id}/',  # Cambio aquí
+            'sorteos': 'http://sorteos-api:8003/api/sorteos/{id}/',  # Cambio aquí
         },
         'PATCH': {
-            'sorteos_seleccionar_ganador': 'http://localhost:8003/api/sorteos/{id}/seleccionar_ganador/',
-            'sorteos_asignar_premio': 'http://localhost:8003/api/sorteos/{id}/asignar_premio/',
+            'sorteos_seleccionar_ganador': 'http://sorteos-api:8003/api/sorteos/{id}/seleccionar_ganador/',
+            # Cambio aquí
+            'sorteos_asignar_premio': 'http://sorteos-api:8003/api/sorteos/{id}/asignar_premio/',  # Cambio aquí
         },
         'DELETE': {
-            'usuarios': 'http://localhost:8001/api/usuarios/eliminar_User/?id_usuario={id}',
-            'diseño_por_id': 'http://localhost:8001/api/diseños/{id}/',
-            'cita_por_id': 'http://localhost:8001/api/citas/{id}/',
-            'noticias': 'http://localhost:8002/noticias/{id}/',
-            'sorteos': 'http://localhost:8003/api/sorteos/{id}/',
+            'usuarios': 'http://api-principal:8001/api/usuarios/eliminar_User/?id_usuario={id}',  # Cambio aquí
+            'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',  # Cambio aquí
+            'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',  # Cambio aquí
+            'noticias': 'http://noticiero-api:8002/noticias/{id}/',  # Cambio aquí
+            'sorteos': 'http://sorteos-api:8003/api/sorteos/{id}/',  # Cambio aquí
         }
     }
 

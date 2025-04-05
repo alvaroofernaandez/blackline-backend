@@ -81,13 +81,14 @@ WSGI_APPLICATION = 'usuarios.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'maez_ink_tfg',
+        'NAME': 'principal_db',
         'USER': 'root',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '3311',
+        'PASSWORD': 'root_password',
+        'HOST': 'mysql',
+        'PORT': '3306',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

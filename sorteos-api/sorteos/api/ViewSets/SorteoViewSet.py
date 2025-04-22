@@ -7,26 +7,49 @@ import mongoengine as me
 
 class SorteoViewSet(APIView):
 
-    def get(self, request):
-        sorteos = Sorteo.objects.all()
-        msgData = [
-            {
-                "id": str(s.id),
-                "titulo": s.titulo,
-                "descripcion": s.descripcion,
-                "fecha_inicio": s.fecha_inicio,
-                "fecha_fin": s.fecha_fin,
-                "estado": s.estado,
-                "ganador": str(s.ganador.instagram_username) if s.ganador else None,
-                "premios": s.premios,
-                "participantes": [
-                    {"instagram_username": p.instagram_username}
-                    for p in s.participantes
-                ]
-            } for s in sorteos
-        ]
-        # "id": str(p.id),
-        return Response(msgData, status=status.HTTP_200_OK)
+    def get(self, request, sorteo_id=None):
+        if sorteo_id:
+            # Detalle de un sorteo
+            try:
+                sorteo = Sorteo.objects.get(id=ObjectId(sorteo_id))
+                data = {
+                    "id": str(sorteo.id),
+                    "titulo": sorteo.titulo,
+                    "descripcion": sorteo.descripcion,
+                    "fecha_inicio": sorteo.fecha_inicio,
+                    "fecha_fin": sorteo.fecha_fin,
+                    "estado": sorteo.estado,
+                    "ganador": str(sorteo.ganador.instagram_username) if sorteo.ganador else None,
+                    "premios": sorteo.premios,
+                    "participantes": [
+                        {"instagram_username": p.instagram_username}
+                        for p in sorteo.participantes
+                    ]
+                }
+                return Response(data, status=status.HTTP_200_OK)
+            except Sorteo.DoesNotExist:
+                return Response({"error": "Sorteo no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Lista de todos los sorteos
+            sorteos = Sorteo.objects.all()
+            msgData = [
+                {
+                    "id": str(s.id),
+                    "titulo": s.titulo,
+                    "descripcion": s.descripcion,
+                    "fecha_inicio": s.fecha_inicio,
+                    "fecha_fin": s.fecha_fin,
+                    "estado": s.estado,
+                    "ganador": str(s.ganador.instagram_username) if s.ganador else None,
+                    "premios": s.premios,
+                    "participantes": [
+                        {"instagram_username": p.instagram_username}
+                        for p in s.participantes
+                    ]
+                } for s in sorteos
+            ]
+            return Response(msgData, status=status.HTTP_200_OK)
+
 
     def post(self, request):
         try:

@@ -20,6 +20,7 @@ def route_request(request, service_name, id=None):
             'noticias': 'http://noticiero-api:8002/noticias/',  # Cambio aquí
             'noticias_por_id': 'http://noticiero-api:8002/noticias/{id}/',  # Cambio aquí
             'sorteos': 'http://sorteos-api:8003/api/sorteos/',  # Cambio aquí
+            'sorteo_por_id': 'http://sorteos-api:8003/api/sorteos/{id}/',  # Cambio aquí
             'participantes_por_sorteo': 'http://sorteos-api:8003/api/sorteos/{id}/participantes/',  # Cambio aquí
         },
         'POST': {

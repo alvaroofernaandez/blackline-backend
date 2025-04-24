@@ -1,11 +1,10 @@
-from django.contrib import admin
-from django.urls import path, include,re_path
+from django.urls import re_path
 from . import views
 
-'''
-    Utilizo re_path para poder hacer uso de expresiones regulares y de este modo poder filtrar correctamente segun
-    lo que ha introducido el usuario
-'''
 urlpatterns = [
-    re_path(r'^(?P<service_name>[\w-]+)/?$', views.route_request, name='route_request')
+    # Ruta para capturar 'service_name' y 'id'
+    re_path(r'^(?P<service_name>[\w-]+)/(?P<id>[\w-]+)/$', views.route_request, name='route_request_with_id'),
+
+    # Ruta para capturar solo 'service_name' sin 'id'
+    re_path(r'^(?P<service_name>[\w-]+)/$', views.route_request, name='route_request_without_id'),
 ]

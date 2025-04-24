@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -29,6 +28,7 @@ ALLOWED_HOSTS = []
 
 APPEND_SLASH = False
 
+# Aqui dejo registrado el modelo de usuario que se va a utilizar en este caso el que se encuentra en models.py
 AUTH_USER_MODEL = 'api.User'
 
 # Application definition
@@ -81,15 +81,13 @@ WSGI_APPLICATION = 'usuarios.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'maez_ink_tfg',
+        'NAME': 'principal_db',
         'USER': 'root',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '3311',
+        'PASSWORD': 'root_password',
+        'HOST': 'mysql',
+        'PORT': '3306',
     }
 }
-
-
 
 
 # Password validation
@@ -143,3 +141,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0']

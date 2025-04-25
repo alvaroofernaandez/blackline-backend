@@ -87,6 +87,8 @@ def route_request(request, service_name, id=None):
             params=request.GET.dict() if metodo == 'GET' else None
         )
 
+        if response.status_code == 204:
+            return JsonResponse({}, status=204)
         # Intentar devolver la respuesta en JSON
         try:
             return JsonResponse(response.json(), status=response.status_code, safe=False)

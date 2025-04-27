@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    'corsheaders', 
+    'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -152,4 +153,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['sorteos-api', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['sorteos-api', 'localhost', '127.0.0.1', '0.0.0.0', 'http://localhost:8000', 'http://localhost:8000']

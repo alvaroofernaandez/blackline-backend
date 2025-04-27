@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -142,4 +143,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:8000']

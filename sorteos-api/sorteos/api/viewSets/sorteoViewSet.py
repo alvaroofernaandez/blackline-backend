@@ -25,7 +25,6 @@ class SorteoViewSet(viewsets.ViewSet):
             return None
 
     def list(self, request):
-        print("Hola")
         sorteos = Sorteo.objects.all()
         serializer = SorteoSerializer(sorteos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

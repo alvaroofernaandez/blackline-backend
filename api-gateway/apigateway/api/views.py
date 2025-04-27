@@ -9,6 +9,7 @@ def route_request(request, service_name, id=None):
     servicios = {
         'GET': {
             'usuarios': 'http://api-principal:8001/api/usuarios/',
+            'principal_documentacion': 'http://api-principal:8001/swagger/?format=openapi',
             'usuario_por_id': 'http://api-principal:8001/api/usuarios/buscar_User/?id_usuario={id}',
             'usuarios_antiguos': 'http://api-principal:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
             'diseños': 'http://api-principal:8001/api/diseños/',
@@ -17,8 +18,10 @@ def route_request(request, service_name, id=None):
             'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',
             'noticias': 'http://noticiero-api:8002/noticias/',
             'noticias_por_id': 'http://noticiero-api:8002/noticias/{id}/',
+            'noticias_documentacion': 'http://noticiero-api:8002/swagger/?format=openapi',
             'sorteos': 'http://sorteos-api:8003/api/sorteos/',
             'sorteo_por_id': 'http://sorteos-api:8003/api/sorteos/{id}/',
+            'sorteos_documentacion': 'http://sorteos-api:8003/swagger/?format=openapi',
             'participantes_por_sorteo': 'http://sorteos-api:8003/api/sorteos/{id}/participantes/',
         },
         'POST': {

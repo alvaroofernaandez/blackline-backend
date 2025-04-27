@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..Models.DiseñoModel import Design
 from ..Serializers.DiseñoSerializer import DiseñoSerializer
+from ..permissions import IsNormalUser, IsAdminUser
 
 class DiseñoView(APIView):
-    def get(self, request, pk=None):
+    def get(self, request, pk=None, permission_classes=['IsAdminUser']):
         if pk:
             try:
                 diseño = Design.objects.get(pk=pk)

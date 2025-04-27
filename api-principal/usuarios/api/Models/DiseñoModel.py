@@ -6,6 +6,8 @@ class Design(models.Model):
     titulo = models.CharField(blank=False, max_length=150)
     descripcion = models.CharField(blank=False, max_length=500)
     precio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    alto = models.IntegerField(max_digits=7, null=False, blank=False)
+    ancho = models.IntegerField(max_digits=7, null=False, blank=False)
 
 
     def clean(self):

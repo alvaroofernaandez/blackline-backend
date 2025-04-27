@@ -1,6 +1,7 @@
 from django.contrib.sites import requests
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from ..permissions import IsAdminUser, IsNormalUser
 from rest_framework.response import Response
 from ..models import User
 from ..Serializers.UserSerializer import UsuarioSerializer
@@ -17,14 +18,14 @@ class UserViewSet(viewsets.ModelViewSet):
     def registrar_User(self, request):
         # Diccionario con los datos de el usuario
         contenido = {
-            'nombre': str(request.data.get('nombre', '')),
-            'apellidos': str(request.data.get('apellidos', '')),
+            'username': str(request.data.get('username', '')),
             'email': str(request.data.get('email', '')),
+            'password': str(request.data.get('password', '')),
         }
 
         # Validamos los campos obligatorios
         for key, value in contenido.items():
-            if not value and key != 'apellidos':
+            if not value and key != 'username':
                 return Response({"error": f"El campo '{key}' es obligatorio."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -54,7 +55,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     # Metodo para modificar un usuario
-    @action(detail=False, methods=['put'])
+    @action(detail=False, methods=['put'], permission_classes=[IsAdminUser])
     def modificar_User(self,request):
         # Campo obligatorioDTO.UserDTO
         # Campo obligatorio
@@ -83,9 +84,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         # Modifico los campos ha dado el usuario
         if nombre:
-            usuario.nombre = nombre
-        if apellidos:
-            usuario.apellidos = apellidos
+            usuario.username = nombre
         if email:
             usuario.email = email
 
@@ -97,7 +96,7 @@ class UserViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_200_OK)
 
     # Metodo para eliminar Usuarios
-    @action(detail=False, methods=['delete'])
+    @action(detail=False, methods=['delete'], permission_classes=[IsAdminUser])
     def eliminar_User(self,request):
         id_usuario = request.query_params.get('id_usuario')
 
@@ -119,7 +118,7 @@ class UserViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_404_NOT_FOUND)
 
     # Metodo para buscar un usuario por id
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[IsNormalUser])
     def buscar_User(self, request):
         # Obtenemos el id introducido por el usuario
         id_usuario = request.query_params.get('id_usuario')

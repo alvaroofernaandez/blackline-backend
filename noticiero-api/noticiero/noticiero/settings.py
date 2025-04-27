@@ -159,4 +159,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['noticiero-api', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['noticiero-api', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:4321']

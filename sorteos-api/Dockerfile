@@ -12,4 +12,4 @@ EXPOSE 8003
 
 WORKDIR /app/sorteos/
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8003"]  # Cambia en compose según el puerto real
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8003"]

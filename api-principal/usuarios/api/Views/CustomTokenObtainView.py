@@ -8,12 +8,12 @@ from ..models import User
 class CustomTokenObtainView(APIView):
     def post(self, request):
         # Comprobamos los datos de el usuario ¡
-        username = request.data.get('username')
+        password = request.data.get('password')
         email = request.data.get('email')
 
         try:
             # Filtramos por los usuarios que cumplan con la condicion
-            user = User.objects.get(username=username, email=email)
+            user = User.objects.get(email=email, password=password)
 
         except User.DoesNotExist:
             # En este caso no había ningun usuario con esas credenciales

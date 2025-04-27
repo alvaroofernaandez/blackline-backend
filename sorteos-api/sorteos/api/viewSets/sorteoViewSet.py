@@ -6,8 +6,17 @@ import mongoengine as me
 
 from ..models.sorteoModel import Sorteo
 from ..serializers.sorteoSerializer import SorteoSerializer
+from ..permissions import IsAdminUser, IsNormalUser
 
 class SorteoViewSet(viewsets.ViewSet):
+    permission_classes = []
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsNormalUser()]
+        elif self.action in ['create', 'update', 'destroy', 'seleccionar_ganador', 'asignar_premio']:
+            return [IsAdminUser()]
+        return []
 
     def get_object(self, sorteo_id):
         try:
@@ -16,6 +25,7 @@ class SorteoViewSet(viewsets.ViewSet):
             return None
 
     def list(self, request):
+        print("Hola")
         sorteos = Sorteo.objects.all()
         serializer = SorteoSerializer(sorteos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

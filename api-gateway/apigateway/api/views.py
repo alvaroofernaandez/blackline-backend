@@ -11,7 +11,6 @@ def route_request(request, service_name, id=None):
             'usuarios': 'http://api-principal:8001/api/usuarios/',
             'usuario_por_id': 'http://api-principal:8001/api/usuarios/buscar_User/?id_usuario={id}',
             'usuarios_antiguos': 'http://api-principal:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
-            # Cambio aquí
             'diseños': 'http://api-principal:8001/api/diseños/',
             'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',
             'citas': 'http://api-principal:8001/api/citas/',

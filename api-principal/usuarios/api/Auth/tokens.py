@@ -12,5 +12,6 @@ class CustomToken(RefreshToken):
         token['username'] = user.username
         token['email'] = user.email
         token['role'] = user.role
+        token['instagram_username'] = user.instagram_username
 
         return token

@@ -21,4 +21,4 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','username','email','role', 'instagram_username']
+        fields = '__all__'

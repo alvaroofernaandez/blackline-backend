@@ -14,45 +14,43 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     # Metodo para añadir un usuario
+
     @action(detail=False, methods=['post'])
     def registrar_User(self, request):
-        # Diccionario con los datos de el usuario
         contenido = {
             'username': str(request.data.get('username', '')),
             'email': str(request.data.get('email', '')),
             'password': str(request.data.get('password', '')),
         }
 
-        # Validamos los campos obligatorios
         for key, value in contenido.items():
             if not value and key != 'username':
                 return Response({"error": f"El campo '{key}' es obligatorio."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-        # Validamos el email de la siguiente forma
         try:
             EmailValidator()(contenido['email'])
         except ValidationError:
             return Response({"error": "El campo 'email' no tiene el formato correcto."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Comprobamos si el email está duplicado
         if User.objects.filter(email=contenido['email']).exists():
             return Response({"error": "El email ya existe. Pruebe con otro."},
                             status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Creamos el usuario con el diccionario que he creado al principio
-            usuario = User.objects.create(**contenido)
+            usuario = User(
+                username=contenido['username'],
+                email=contenido['email'],
+            )
+            usuario.set_password(contenido['password'])
+            usuario.save()
 
-            # Muestro un mensaje con el id de el usuario y el codigo de creacion 201
             return Response({"mensaje": f"El usuario con el id {usuario.pk} ha sido añadido correctamente"},
                             status=status.HTTP_201_CREATED)
         except Exception as e:
-            # Manejo de errores
             return Response({"error": f"Error al crear el usuario: {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
-
 
     # Metodo para modificar un usuario
     @action(detail=False, methods=['put'], permission_classes=[IsAdminUser])

@@ -10,7 +10,7 @@ class NoticiasListCreateView(APIView):
         if self.request.method == 'GET':
             return [IsNormalUser()]
         elif self.request.method == 'POST':
-            return [IsAdminUser()]
+            return [IsNormalUser()]
         return []
 
     def get(self, request):
@@ -30,7 +30,7 @@ class NoticiasDetailView(APIView):
         if self.request.method == 'GET':
             return [IsNormalUser()]
         elif self.request.method in ['PUT', 'DELETE']:
-            return [IsAdminUser()]
+            return [IsNormalUser()]
         return []
 
     def get(self, request, pk):

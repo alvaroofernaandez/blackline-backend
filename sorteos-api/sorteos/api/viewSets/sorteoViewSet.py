@@ -53,11 +53,13 @@ class SorteoViewSet(viewsets.ViewSet):
         if not sorteo:
             return Response({"error": "Sorteo no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        sorteo.estado = request.data.get("estado", sorteo.estado)
+        serializer = SorteoSerializer(sorteo, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            sorteo.clean()
-            sorteo.save()
-            return Response({"message": "Sorteo actualizado correctamente"}, status=status.HTTP_200_OK)
+            serializer.save()
+            return Response({"message": "Sorteo actualizado correctamente", "data": serializer.data}, status=status.HTTP_200_OK)
         except me.ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

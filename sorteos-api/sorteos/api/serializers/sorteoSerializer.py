@@ -27,3 +27,9 @@ class SorteoSerializer(serializers.Serializer):
         if data['fecha_inicio'] >= data['fecha_fin']:
             raise serializers.ValidationError("La fecha de inicio debe ser anterior a la fecha de fin.")
         return data
+    
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance

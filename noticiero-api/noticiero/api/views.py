@@ -5,21 +5,13 @@ from .models import Noticias
 from .serializers import NoticiasSerializer
 from .permissions import IsAdminUser, IsNormalUser
 
-# Vista para listar y crear noticias
 class NoticiasListCreateView(APIView):
-    permission_classes = []
-    def get_object(self, noticia_id):
-        try:
-            return Noticias.objects.get(id=noticia_id)
-        except Noticias.DoesNotExist:
-            return None
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsNormalUser()]
         elif self.request.method == 'POST':
             return [IsAdminUser()]
         return []
-
 
     def get(self, request):
         noticias = Noticias.objects.all()
@@ -33,16 +25,7 @@ class NoticiasListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Vista para detalles de una noticia específica
 class NoticiasDetailView(APIView):
-    permission_classes = []
-
-    def get_object(self, noticia_id):
-        try:
-            return Noticias.objects.get(id=noticia_id)
-        except Noticias.DoesNotExist:
-            return None
-
     def get_permissions(self):
         if self.request.method == 'GET':
             return [IsNormalUser()]

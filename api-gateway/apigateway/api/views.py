@@ -26,6 +26,8 @@ def route_request(request, service_name, id=None):
         },
         'POST': {
             'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',
+            'enviar_correos_masivos':'http://api-principal:8001/api/send-emails/',
+            'enviar_correos_personalizados':'http://api-principal:8001/api/send-single-email/',
             'diseños': 'http://api-principal:8001/api/diseños/',
             'citas': 'http://api-principal:8001/api/citas/',
             'noticias': 'http://noticiero-api:8002/noticias/',
@@ -42,6 +44,7 @@ def route_request(request, service_name, id=None):
             'sorteos': 'http://sorteos-api:8003/api/sorteos/{id}/',
         },
         'PATCH': {
+            'modificar_recibir_correos': 'http://api-principal:8001/api/usuarios/modificar-recibir-correos/',
             'sorteos_seleccionar_ganador': 'http://sorteos-api:8003/api/sorteos/{id}/seleccionar_ganador/',
             'sorteos_asignar_premio': 'http://sorteos-api:8003/api/sorteos/{id}/asignar_premio/',
         },

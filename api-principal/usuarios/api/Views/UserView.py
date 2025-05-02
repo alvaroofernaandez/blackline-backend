@@ -57,24 +57,36 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['patch'], url_path='modificar-recibir-correos')
     def modificar_can_receive_emails(self, request):
-        user = request.user
+        user_id = request.data.get('id')
         nuevo_valor = request.data.get('can_receive_emails')
 
-        if nuevo_valor is None:
-            return Response({"error": "El campo 'can_receive_emails' es obligatorio."},
-                            status=status.HTTP_400_BAD_REQUEST)
+        if user_id is None or nuevo_valor is None:
+            return Response(
+                {"error": "Los campos 'id' y 'can_receive_emails' son obligatorios."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if isinstance(nuevo_valor, str):
             nuevo_valor = nuevo_valor.strip().lower() == 'true'
 
         try:
+            user = User.objects.get(id=user_id)
             user.can_receive_emails = nuevo_valor
             user.save()
-            return Response({"mensaje": f"'can_receive_emails' actualizado a {user.can_receive_emails}"},
-                            status=status.HTTP_200_OK)
+            return Response(
+                {"mensaje": f"'can_receive_emails' del usuario {user_id} actualizado a {user.can_receive_emails}"},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Usuario con id {user_id} no encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
         except Exception as e:
-            return Response({"error": f"No se pudo actualizar: {str(e)}"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": f"No se pudo actualizar: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     # Metodo para modificar un usuario
     @action(detail=False, methods=['put'], permission_classes=[IsAdminUser])

@@ -45,6 +45,7 @@ def route_request(request, service_name, id=None):
         },
         'PATCH': {
             'modificar_recibir_correos': 'http://api-principal:8001/api/usuarios/modificar-recibir-correos/',
+            'modificar_nombre_instagram': 'http://api-principal:8001/api/usuarios/modificar-instagram-username/',
             'sorteos_seleccionar_ganador': 'http://sorteos-api:8003/api/sorteos/{id}/seleccionar_ganador/',
             'sorteos_asignar_premio': 'http://sorteos-api:8003/api/sorteos/{id}/asignar_premio/',
         },

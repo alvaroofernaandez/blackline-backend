@@ -55,6 +55,43 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": f"Error al crear el usuario: {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['patch'], url_path='modificar-instagram-username')
+    def modificar_instagram_username(self, request):
+        user_id = request.data.get('id')
+        nuevo_username = request.data.get('instagram_username')
+
+        if not user_id or not nuevo_username:
+            return Response(
+                {"error": "Los campos 'id' e 'instagram_username' son obligatorios."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            if User.objects.filter(instagram_username=nuevo_username).exclude(id=user_id).exists():
+                return Response(
+                    {"error": "El nombre de usuario de Instagram ya está en uso."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user = User.objects.get(id=user_id)
+            user.instagram_username = nuevo_username
+            user.save()
+
+            return Response(
+                {"mensaje": f"Instagram username del usuario {user_id} actualizado correctamente."},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Usuario con id {user_id} no encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"No se pudo actualizar el instagram_username: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
     @action(detail=False, methods=['patch'], url_path='modificar-recibir-correos')
     def modificar_can_receive_emails(self, request):
         user_id = request.data.get('id')

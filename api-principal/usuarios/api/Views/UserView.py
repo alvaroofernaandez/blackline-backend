@@ -21,6 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
             'username': str(request.data.get('username', '')),
             'email': str(request.data.get('email', '')),
             'password': str(request.data.get('password', '')),
+            # 'can_receive_emails': bool(request.data.get('can_receive_emails', 'False'))
         }
 
         for key, value in contenido.items():
@@ -38,10 +39,18 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": "El email ya existe. Pruebe con otro."},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        '''
+        recibir_correos = False
+        if contenido['can_receive_emails'] == "False":
+            recibir_correos = False
+        else:
+            recibir_correos = True
+        '''
         try:
             usuario = User(
                 username=contenido['username'],
                 email=contenido['email'],
+                # can_receive_mails=recibir_correos
             )
             usuario.set_password(contenido['password'])
             usuario.save()

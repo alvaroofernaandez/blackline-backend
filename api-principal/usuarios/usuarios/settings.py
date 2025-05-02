@@ -31,6 +31,15 @@ APPEND_SLASH = False
 # Aqui dejo registrado el modelo de usuario que se va a utilizar en este caso el que se encuentra en models.py
 AUTH_USER_MODEL = 'api.User'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'afjtfg@gmail.com'
+EMAIL_HOST_PASSWORD = 'kcui sjjw ygrc oakx'
+EMAIL_HOST_USER = 'jdeomoya@gmail.com'
+
+
 # Application definition
 
 INSTALLED_APPS = [

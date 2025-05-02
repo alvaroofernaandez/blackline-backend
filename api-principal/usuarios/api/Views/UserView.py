@@ -18,14 +18,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def registrar_User(self, request):
         contenido = {
-            'username': str(request.data.get('username', '')),
-            'email': str(request.data.get('email', '')),
-            'password': str(request.data.get('password', '')),
-            # 'can_receive_emails': bool(request.data.get('can_receive_emails', 'False'))
+            'username': str(request.data.get('username', '')).strip(),
+            'email': str(request.data.get('email', '')).strip(),
+            'password': str(request.data.get('password', '')).strip(),
+            'can_receive_emails': str(request.data.get('can_receive_emails', 'false')).lower() == 'true'
         }
 
-        for key, value in contenido.items():
-            if not value and key != 'username':
+        # Validación más precisa
+        for key in ['email', 'password', 'can_receive_emails']:
+            if key not in request.data or request.data[key] in [None, '']:
                 return Response({"error": f"El campo '{key}' es obligatorio."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -39,18 +40,11 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": "El email ya existe. Pruebe con otro."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        '''
-        recibir_correos = False
-        if contenido['can_receive_emails'] == "False":
-            recibir_correos = False
-        else:
-            recibir_correos = True
-        '''
         try:
             usuario = User(
                 username=contenido['username'],
                 email=contenido['email'],
-                # can_receive_mails=recibir_correos
+                can_receive_emails=contenido['can_receive_emails']
             )
             usuario.set_password(contenido['password'])
             usuario.save()
@@ -59,6 +53,27 @@ class UserViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"error": f"Error al crear el usuario: {str(e)}"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['patch'], url_path='modificar-recibir-correos')
+    def modificar_can_receive_emails(self, request):
+        user = request.user
+        nuevo_valor = request.data.get('can_receive_emails')
+
+        if nuevo_valor is None:
+            return Response({"error": "El campo 'can_receive_emails' es obligatorio."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if isinstance(nuevo_valor, str):
+            nuevo_valor = nuevo_valor.strip().lower() == 'true'
+
+        try:
+            user.can_receive_emails = nuevo_valor
+            user.save()
+            return Response({"mensaje": f"'can_receive_emails' actualizado a {user.can_receive_emails}"},
+                            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": f"No se pudo actualizar: {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
     # Metodo para modificar un usuario

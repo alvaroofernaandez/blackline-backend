@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Factura</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 40px;
+            background-color: #fafafa;
+            color: #2c2c2c;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid #bbb;
+            padding-bottom: 12px;
+            margin-bottom: 30px;
+        }
+
+        header img {
+            width: 110px;
+            margin-right: 25px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            color: #444;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #555;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+        }
+
+        .info, .datos {
+            margin-bottom: 25px;
+        }
+
+        .info p, .datos p {
+            margin: 4px 0;
+        }
+
+        .datos-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .datos {
+            width: 48%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        thead {
+            background-color: #e2e2e2;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+        }
+
+        th {
+            color: #333;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+        }
+
+        td {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        .total {
+            margin-top: 35px;
+            font-size: 1.3em;
+            text-align: right;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .informacion-adicional {
+            margin-top: 50px;
+            padding: 20px 25px;
+            background-color: #f1f1f1;
+            font-size: 0.92em;
+            color: #444;
+            border-top: 2px solid #ccc;
+        }
+        
+        .informacion-adicional .titulo {
+            font-weight: bold;
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        
+        
+
+        .agradecimiento {
+            margin-top: 45px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="logo.png" alt="Logo de la empresa">
+        <h1>FACTURA</h1>
+    </header>
+
+    <div class="info">
+        <p><strong>Factura Nº:</strong> </p>
+        <p><strong>Fecha:</strong> </p>
+    </div>
+
+    <div class="datos-container">
+        <div class="datos">
+            <h2>Datos de la empresa</h2>
+            <p><strong>Nombre:</strong> Blackline tattoo</p>
+            <p><strong>NIF:</strong> </p>
+            <p><strong>Dirección:</strong> </p>
+            <p><strong>Teléfono:</strong> </p>
+            <p><strong>Email:</strong> </p>
+        </div>
+        <div class="datos">
+            <h2>Datos del cliente</h2>
+            <p><strong>Nombre:</strong> </p>
+            <p><strong>NIF:</strong> </p>
+            <p><strong>Dirección:</strong> </p>
+            <p><strong>Teléfono:</strong> </p>
+            <p><strong>Email:</strong> </p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Duración</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p>Total a pagar: </p>
+    </div>
+
+    <div class="informacion-adicional">
+        <p class="titulo">Información adicional</p>
+        <p>Esta factura corresponde a un servicio ya abonado por el cliente.</p>
+        <p>Si necesita una copia de la confirmación del pago o desea más detalles del servicio prestado, no dude en contactarnos.</p>
+        <p>Gracias por confiar en <strong>Blackline Tattoo</strong>. ¡Esperamos verle pronto!</p>
+    </div>
+    
+
+    
+    <p class="agradecimiento">Gracias por su confianza</p>
+    <hr>
+</body>
+
+</html>

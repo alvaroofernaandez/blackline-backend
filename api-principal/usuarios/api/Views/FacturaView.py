@@ -15,9 +15,14 @@ class FacturaViewSet(viewsets.ModelViewSet):
     serializer_class = FacturaSerializer
 
 
-    @action(detail=True, renderer_classes=[TemplateHTMLRenderer])
-    def detalle(self, request, pk=None):
-        factura = get_object_or_404(Factura, pk=pk)
+    @action(detail=False,methods=['get'], renderer_classes=[TemplateHTMLRenderer])
+    def detalle(self, request):
+        id = request.data.get('id')
+
+        if not id:
+            raise ValidationError("Se debe proporcionar un id.")
+
+        factura = get_object_or_404(Factura, pk=id)
         return Response({'factura': factura}, template_name='factura/detalle.html')
 
     def create(self, request):

@@ -4,9 +4,11 @@ from rest_framework.routers import DefaultRouter
 from .Views.DiseñoView import DiseñoView
 from .Views.UserView import UserViewSet
 from .Views.CitasView import CitasViewSet
+from .Views.FacturaView import FacturaViewSet
 
 router = DefaultRouter()
 router.register(r'usuarios', UserViewSet, basename='usuarios')
+router.register('facturas', FacturaViewSet, basename='facturas')
 
 urlpatterns = [
   path('', include(router.urls)),

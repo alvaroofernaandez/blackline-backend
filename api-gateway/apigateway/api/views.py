@@ -9,6 +9,7 @@ def route_request(request, service_name, id=None):
     servicios = {
         'GET': {
             'usuarios': 'http://api-principal:8001/api/usuarios/',
+            'facturas': 'http://api-principal:8001/api/facturas/detalle/',
             'principal_documentacion': 'http://api-principal:8001/swagger/?format=openapi',
             'usuario_por_id': 'http://api-principal:8001/api/usuarios/buscar_User/?id_usuario={id}',
             'usuarios_antiguos': 'http://api-principal:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
@@ -26,6 +27,7 @@ def route_request(request, service_name, id=None):
         },
         'POST': {
             'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',
+            'facturas': 'http://api-principal:8001/api/facturas/',
             'enviar_correos_masivos':'http://api-principal:8001/api/send-emails/',
             'enviar_correos_personalizados':'http://api-principal:8001/api/send-single-email/',
             'diseños': 'http://api-principal:8001/api/diseños/',

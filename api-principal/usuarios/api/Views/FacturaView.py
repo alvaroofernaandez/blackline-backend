@@ -15,15 +15,23 @@ class FacturaViewSet(viewsets.ModelViewSet):
     serializer_class = FacturaSerializer
 
 
-    @action(detail=False,methods=['get'], renderer_classes=[TemplateHTMLRenderer])
+    @action(detail=False, methods=['get'], renderer_classes=[TemplateHTMLRenderer])
     def detalle(self, request):
-        id = request.data.get('id')
+        # Obtener el id desde el cuerpo de la solicitud (request.data)
+        id = request.query_params.get('id')
 
+        # Verificar si el id fue proporcionado
         if not id:
             raise ValidationError("Se debe proporcionar un id.")
 
+        # Obtener la factura usando el id
         factura = get_object_or_404(Factura, pk=id)
-        return Response({'factura': factura}, template_name='factura/detalle.html')
+
+        # Serializar la factura
+        factura_data = FacturaSerializer(factura).data
+
+        # Retornar la respuesta con los datos de la factura y el template
+        return Response({'factura': factura_data}, template_name='factura/factura.html')
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)

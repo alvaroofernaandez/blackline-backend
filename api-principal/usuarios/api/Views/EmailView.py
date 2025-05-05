@@ -7,6 +7,7 @@ from ..models import User
 from django.core.mail import send_mail
 from ..Serializers.UserSerializer import UsuarioSerializer
 from .utils import send_email_users_where_allowed
+from django.template.loader import render_to_string
 
 
 class SendSingleEmailAPIView(APIView):
@@ -14,10 +15,11 @@ class SendSingleEmailAPIView(APIView):
         correo = request.data.get("correo")
         asunto = request.data.get("asunto")
         mensaje = request.data.get("mensaje")
+        nombre = request.data.get("nombre")
 
-        if not correo or not asunto or not mensaje:
+        if not correo or not asunto or not mensaje or not nombre:
             return Response(
-                {"error": "Por favor, proporciona correo, asunto y mensaje."},
+                {"error": "Por favor, proporciona correo, asunto, mensaje y nombre."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -28,15 +30,19 @@ class SendSingleEmailAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
+            email_body = render_to_string('mail/mail.html', {'nombre': nombre, 'mensaje': mensaje})
+
             send_mail(
                 subject=asunto,
                 message=mensaje,
                 from_email="jdeomoya@gmail.com",
                 recipient_list=[correo],
                 fail_silently=False,
+                html_message=email_body
             )
 
             return Response({"message": "Correo enviado exitosamente!"}, status=status.HTTP_200_OK)
+
         except Exception as e:
             return Response(
                 {"error": f"Error al enviar el correo: {str(e)}"},
@@ -44,11 +50,9 @@ class SendSingleEmailAPIView(APIView):
             )
 class SendEmailsAPIView(APIView):
     def post(self, request):
-        # Recibir los datos desde el cuerpo de la solicitud.
         asunto = request.data.get("asunto")
         mensaje = request.data.get("mensaje")
 
-        # Validar que los campos sean proporcionados
         if not asunto or not mensaje:
             return Response(
                 {"error": "Por favor, proporciona un asunto y un mensaje."},
@@ -66,12 +70,17 @@ class SendEmailsAPIView(APIView):
 
             correos_destinatarios = usuarios.values_list('email', flat=True)
 
+            html_message = render_to_string('mail/mail.html', {
+                'mensaje': mensaje,
+            })
+
             for correo in correos_destinatarios:
                 send_mail(
                     subject=asunto,
                     message=mensaje,
                     from_email="jdeomoya@gmail.com",
                     recipient_list=[correo],
+                    html_message=html_message,
                     fail_silently=False,
                 )
 
@@ -81,32 +90,36 @@ class SendEmailsAPIView(APIView):
                 {"error": f"Error al enviar los correos: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     @action(detail=False, methods=['POST'])
-    def send_personalized_email(self,request):
+    def send_personalized_email(self, request):
         nombre = request.data.get("nombre")
         correo = request.data.get("correo")
         asunto = request.data.get("asunto")
         mensaje = request.data.get("mensaje")
 
         if not nombre or not correo or not asunto or not mensaje:
-            return Response("Error inserte name, email, can_receive_emails", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Error: Inserte nombre, correo, asunto y mensaje.", status=status.HTTP_400_BAD_REQUEST)
 
-        #Ahora comprobamos que el usuario existe dentro de los que tenemos en la bbdd registrados
         try:
             if not User.objects.filter(email=correo).exists():
                 return Response(
                     {"error": f"No existe un usuario registrado con el correo: {correo}"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
+
+            email_body = render_to_string('mail/mail.html', {'nombre': nombre, 'mensaje': mensaje})
+
             send_mail(
                 subject=asunto,
                 message=mensaje,
                 from_email="jdeomoya@gmail.com",
                 recipient_list=[correo],
-                fail_silently=False, #permite lanzar una excepcion en caso de error
+                fail_silently=False,
+                html_message=email_body
             )
+
+            return Response({"message": "Correo enviado exitosamente!"}, status=status.HTTP_200_OK)
+
         except Exception as e:
             return Response(
                 {"error": f"Error al enviar el correo: {str(e)}"},

@@ -10,14 +10,10 @@ class Factura(models.Model):
     fecha_emision = models.DateField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    '''
-    def calcular_total(self):
-        total = 0
-        if self.cita and self.cita.design and self.cita.estado == 'completada':
-            total = self.cita.design.precio or 0
-        self.total = total
-        self.save(update_fields=['total'])
-    '''
     def save(self, *args, **kwargs):
+        if self.cita and self.cita.design and self.cita.design.precio:
+            self.total = self.cita.design.precio
+        else:
+            self.total = 0.00
+
         super().save(*args, **kwargs)
-        '''self.calcular_total()'''

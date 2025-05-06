@@ -45,16 +45,9 @@ class FacturaViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         factura = serializer.save()
 
-        total = 0
+        cita = factura.cita
+        if cita.estado != 'completada':
+            cita.estado = 'completada'
+            cita.save()
 
-        for cita in factura.citas.all():
-            if cita.estado != 'completada':
-                cita.estado = 'completada'
-                cita.save()
-
-
-        factura.total = total
-        factura.save()
-
-        return Response({'factura': serializer.data}, status=status.HTTP_201_CREATED)
-
+        return Response({'factura': FacturaSerializer(factura).data}, status=status.HTTP_201_CREATED)

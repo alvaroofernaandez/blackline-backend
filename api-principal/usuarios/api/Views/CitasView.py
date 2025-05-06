@@ -58,3 +58,26 @@ class CitasViewSet(APIView):
                 return Response({"error": "Cita no encontrada"}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"error": "Se requiere el id de la cita"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get_tramo_horario(self, request):
+        #Obtener los tramos disponibles del dia seleccionado
+        fecha = request.query_params.get('fecha')
+        if not fecha:
+            return Response({"error": "Se requiere el parámetro 'fecha'"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try: 
+            citas = Cita.objects.filter(fecha=fecha)
+            tramos_disponibles = {
+                "09:00-11:00": True,
+                "11:00-13:00": True,
+                "15:00-17:00": True,
+                "17:00-19:00": True,
+            }
+            
+            for cita in citas:
+                if cita.hora in tramos_disponibles:
+                    tramos_disponibles[cita.hora] = False
+            
+            return Response(tramos_disponibles, status=status.HTTP_200_OK)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)     

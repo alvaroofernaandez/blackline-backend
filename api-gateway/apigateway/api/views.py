@@ -1,15 +1,18 @@
 import requests
-import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
-def route_request(request, service_name, id=None):
-    # Definir las rutas de los microservicios
+def route_request(request, service_name=None, id=None, **kwargs):
+    if not service_name:
+        service_name = kwargs.get('service_name')
+
+    # Definición de servicios
     servicios = {
         'GET': {
             'usuarios': 'http://api-principal:8001/api/usuarios/',
-            'detalle_facturas': 'http://api-principal:8001/api/facturas/detalle/?id=1',
+            'facturas': 'http://api-principal:8001/api/facturas/',
+            'detalle_facturas': 'http://api-principal:8001/api/facturas/detalle/',
             'principal_documentacion': 'http://api-principal:8001/swagger/?format=openapi',
             'usuario_por_id': 'http://api-principal:8001/api/usuarios/buscar_User/?id_usuario={id}',
             'usuarios_antiguos': 'http://api-principal:8001/api/usuarios/usuariosAntiguos/?limit={limit}',
@@ -28,8 +31,8 @@ def route_request(request, service_name, id=None):
         'POST': {
             'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',
             'facturas': 'http://api-principal:8001/api/facturas/',
-            'enviar_correos_masivos':'http://api-principal:8001/api/send-emails/',
-            'enviar_correos_personalizados':'http://api-principal:8001/api/send-single-email/',
+            'enviar_correos_masivos': 'http://api-principal:8001/api/send-emails/',
+            'enviar_correos_personalizados': 'http://api-principal:8001/api/send-single-email/',
             'diseños': 'http://api-principal:8001/api/diseños/',
             'citas': 'http://api-principal:8001/api/citas/',
             'noticias': 'http://noticiero-api:8002/noticias/',
@@ -62,28 +65,24 @@ def route_request(request, service_name, id=None):
 
     metodo = request.method.upper()
 
-    # Verificar si el servicio y el método están definidos
+    # Verificación de si la ruta y método existen en los servicios
     if metodo not in servicios or service_name not in servicios[metodo]:
         return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'}, status=404)
 
-    # Obtener la URL base correspondiente al servicio
     url_final = servicios[metodo][service_name]
 
-    # Si es PUT, PATCH o DELETE, asegúrate de que 'id' está presente
+    # Validación si se requiere un id pero no se ha proporcionado
     if '{id}' in url_final and not id:
         return JsonResponse({'error': 'Se requiere un id en la solicitud.'}, status=400)
 
-    # Reemplazar 'id' en la URL final
     if id:
         url_final = url_final.format(id=id)
 
-    # Preparar encabezados
     headers = {
         'Authorization': request.headers.get('Authorization', ''),
         'Content-Type': 'application/json'
     }
 
-    # Hacer la petición al microservicio
     try:
         response = requests.request(
             method=metodo,
@@ -93,13 +92,39 @@ def route_request(request, service_name, id=None):
             params=request.GET.dict() if metodo == 'GET' else None
         )
 
+        # Verificar si la respuesta es 204 (sin contenido)
         if response.status_code == 204:
             return JsonResponse({}, status=204)
-        # Intentar devolver la respuesta en JSON
-        try:
+
+        content_type = response.headers.get('Content-Type', '')
+        content_disposition = response.headers.get('Content-Disposition', '')
+
+        # Verificar si se está pidiendo una descarga
+        download = request.GET.get('download', '0')
+
+        # Si 'download=1', forzamos la descarga
+        if download == '1' or 'attachment' in content_disposition:
+            if not content_disposition:
+                content_disposition = 'attachment'
+
+            resp = HttpResponse(
+                response.content,
+                status=response.status_code,
+                content_type=content_type
+            )
+            resp['Content-Disposition'] = content_disposition
+            return resp
+
+        # Si no es descarga, devolvemos la respuesta en formato JSON
+        if 'application/json' in content_type:
             return JsonResponse(response.json(), status=response.status_code, safe=False)
-        except ValueError:
-            return JsonResponse({'error': 'Respuesta no es un JSON válido.', 'status': response.status_code}, status=500)
+
+        # En caso contrario, simplemente devolvemos el contenido tal cual
+        return HttpResponse(
+            response.content,
+            status=response.status_code,
+            content_type=content_type
+        )
 
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': f'Error al conectar con el microservicio: {str(e)}'}, status=500)

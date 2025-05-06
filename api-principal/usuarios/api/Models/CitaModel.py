@@ -7,7 +7,7 @@ from ..Models.DiseñoModel import Design
 
 class Cita(models.Model):
     solicitante = models.ForeignKey(User, on_delete=models.CASCADE, related_name='citas')
-    design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='citas'),
+    design = models.ForeignKey(Design, on_delete=models.SET_NULL, null=True, blank=True, related_name='citas')
     fecha = models.DateField(verbose_name="Fecha de la cita")
     hora = models.CharField(max_length=1,
         choices=[

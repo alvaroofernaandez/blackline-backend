@@ -20,6 +20,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',
             'citas': 'http://api-principal:8001/api/citas/',
             'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',
+            'citas_tramo_horario': 'http://api-principal:8001/api/citas/tramo_horario/',
             'noticias': 'http://noticiero-api:8002/noticias/',
             'noticias_por_id': 'http://noticiero-api:8002/noticias/{id}/',
             'noticias_documentacion': 'http://noticiero-api:8002/swagger/?format=openapi',

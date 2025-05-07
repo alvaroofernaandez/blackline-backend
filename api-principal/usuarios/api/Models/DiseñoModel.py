@@ -8,6 +8,7 @@ class Design(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     alto = models.IntegerField(null=False, blank=False)
     ancho = models.IntegerField(null=False, blank=False)
+    duracion = models.IntegerField(null=True, blank=True)
 
 
     def clean(self):

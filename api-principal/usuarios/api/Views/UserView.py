@@ -14,45 +14,116 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     # Metodo para añadir un usuario
+
     @action(detail=False, methods=['post'])
     def registrar_User(self, request):
-        # Diccionario con los datos de el usuario
         contenido = {
-            'username': str(request.data.get('username', '')),
-            'email': str(request.data.get('email', '')),
-            'password': str(request.data.get('password', '')),
+            'username': str(request.data.get('username', '')).strip(),
+            'email': str(request.data.get('email', '')).strip(),
+            'password': str(request.data.get('password', '')).strip(),
+            'can_receive_emails': str(request.data.get('can_receive_emails', 'false')).lower() == 'true'
         }
 
-        # Validamos los campos obligatorios
-        for key, value in contenido.items():
-            if not value and key != 'username':
+        # Validación más precisa
+        for key in ['email', 'password', 'can_receive_emails']:
+            if key not in request.data or request.data[key] in [None, '']:
                 return Response({"error": f"El campo '{key}' es obligatorio."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-        # Validamos el email de la siguiente forma
         try:
             EmailValidator()(contenido['email'])
         except ValidationError:
             return Response({"error": "El campo 'email' no tiene el formato correcto."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Comprobamos si el email está duplicado
         if User.objects.filter(email=contenido['email']).exists():
             return Response({"error": "El email ya existe. Pruebe con otro."},
                             status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Creamos el usuario con el diccionario que he creado al principio
-            usuario = User.objects.create(**contenido)
+            usuario = User(
+                username=contenido['username'],
+                email=contenido['email'],
+                can_receive_emails=contenido['can_receive_emails']
+            )
+            usuario.set_password(contenido['password'])
+            usuario.save()
 
-            # Muestro un mensaje con el id de el usuario y el codigo de creacion 201
             return Response({"mensaje": f"El usuario con el id {usuario.pk} ha sido añadido correctamente"},
                             status=status.HTTP_201_CREATED)
         except Exception as e:
-            # Manejo de errores
             return Response({"error": f"Error al crear el usuario: {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['patch'], url_path='modificar-instagram-username')
+    def modificar_instagram_username(self, request):
+        user_id = request.data.get('id')
+        nuevo_username = request.data.get('instagram_username')
+
+        if not user_id or not nuevo_username:
+            return Response(
+                {"error": "Los campos 'id' e 'instagram_username' son obligatorios."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            if User.objects.filter(instagram_username=nuevo_username).exclude(id=user_id).exists():
+                return Response(
+                    {"error": "El nombre de usuario de Instagram ya está en uso."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user = User.objects.get(id=user_id)
+            user.instagram_username = nuevo_username
+            user.save()
+
+            return Response(
+                {"mensaje": f"Instagram username del usuario {user_id} actualizado correctamente."},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Usuario con id {user_id} no encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"No se pudo actualizar el instagram_username: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @action(detail=False, methods=['patch'], url_path='modificar-recibir-correos')
+    def modificar_can_receive_emails(self, request):
+        user_id = request.data.get('id')
+        nuevo_valor = request.data.get('can_receive_emails')
+
+        if user_id is None or nuevo_valor is None:
+            return Response(
+                {"error": "Los campos 'id' y 'can_receive_emails' son obligatorios."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if isinstance(nuevo_valor, str):
+            nuevo_valor = nuevo_valor.strip().lower() == 'true'
+
+        try:
+            user = User.objects.get(id=user_id)
+            user.can_receive_emails = nuevo_valor
+            user.save()
+            return Response(
+                {"mensaje": f"'can_receive_emails' del usuario {user_id} actualizado a {user.can_receive_emails}"},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Usuario con id {user_id} no encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"No se pudo actualizar: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     # Metodo para modificar un usuario
     @action(detail=False, methods=['put'], permission_classes=[IsAdminUser])

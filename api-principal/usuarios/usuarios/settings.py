@@ -31,6 +31,15 @@ APPEND_SLASH = False
 # Aqui dejo registrado el modelo de usuario que se va a utilizar en este caso el que se encuentra en models.py
 AUTH_USER_MODEL = 'api.User'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'afjtfg@gmail.com'
+EMAIL_HOST_PASSWORD = 'kcui sjjw ygrc oakx'
+EMAIL_HOST_USER = 'jdeomoya@gmail.com'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -59,7 +69,7 @@ ROOT_URLCONF = 'usuarios.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +137,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
@@ -142,4 +152,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:8000']

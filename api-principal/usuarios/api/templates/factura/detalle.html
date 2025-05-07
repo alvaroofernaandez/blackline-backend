@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Factura #{{ factura.id }}</title>
+</head>
+<body>
+    <h1>Factura #{{ factura.id }}</h1>
+    <p>Cliente: {{ factura.cliente.username }}</p>
+    <p>Fecha: {{ factura.fecha_emision }}</p>
+    <p>Total: {{ factura.total }} €</p>
+
+    <h2>Citas:</h2>
+    <ul>
+        {% for cita in factura.citas.all %}
+            <li>{{ cita.fecha }} - {{ cita.hora }} - {{ cita.design.titulo }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

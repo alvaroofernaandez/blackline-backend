@@ -3,11 +3,29 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from api.Views.UserView import UserViewSet
 from api.Views.CustomTokenObtainView import CustomTokenObtainView
+from api.Views.EmailView import SendEmailsAPIView, SendSingleEmailAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
 
 router = DefaultRouter()
 router.register(r'usuarios', UserViewSet, basename='usuario')
 
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API Principal",
+        default_version='v1',
+        description="Documentación de la API de Principal",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@sorteos.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +33,7 @@ urlpatterns = [
     path('api/', include('api.urls')),  # Incluimos las rutas adicionales definidas en api/urls.py
     path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
+    path('api/send-single-email/', SendSingleEmailAPIView.as_view(), name='send_single_email'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
 ]

@@ -30,7 +30,9 @@ class SendSingleEmailAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            email_body = render_to_string('mail/mail.html', {'nombre': nombre, 'mensaje': mensaje})
+            email_body = render_to_string('mail/mail.html', {'nombre': nombre,
+                                                                                  'mensaje': mensaje,
+                                                                                  'asunto': asunto})
 
             send_mail(
                 subject=asunto,
@@ -70,9 +72,8 @@ class SendEmailsAPIView(APIView):
 
             correos_destinatarios = usuarios.values_list('email', flat=True)
 
-            html_message = render_to_string('mail/mail.html', {
-                'mensaje': mensaje,
-            })
+            html_message = render_to_string('mail/mail.html', { 'mensaje': mensaje,
+                                                                                     'asunto': asunto})
 
             for correo in correos_destinatarios:
                 send_mail(
@@ -107,7 +108,9 @@ class SendEmailsAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            email_body = render_to_string('mail/mail.html', {'nombre': nombre, 'mensaje': mensaje})
+            email_body = render_to_string('mail/mail.html', {'nombre': nombre,
+                                                                                  'mensaje': mensaje,
+                                                                                  'asunto': asunto})
 
             send_mail(
                 subject=asunto,

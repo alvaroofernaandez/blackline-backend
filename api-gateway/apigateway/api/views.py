@@ -60,6 +60,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',
             'noticias': 'http://noticiero-api:8002/noticias/{id}/',
             'sorteos': 'http://sorteos-api:8003/api/sorteos/{id}/',
+            'facturas': 'http://api-principal:8001/api/facturas/{id}/',
         }
     }
 

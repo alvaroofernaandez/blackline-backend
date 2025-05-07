@@ -61,10 +61,10 @@ class CitasViewSet(viewsets.ViewSet):
         try:
             citas = Cita.objects.filter(fecha=fecha)
             tramos_disponibles = {
-                "09:00-11:00": True,
-                "11:00-13:00": True,
-                "15:00-17:00": True,
-                "17:00-19:00": True,
+                "1": True,
+                "2": True,
+                "3": True,
+                "4": True,
             }
 
             for cita in citas:

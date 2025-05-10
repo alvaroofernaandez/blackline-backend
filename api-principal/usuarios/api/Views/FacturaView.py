@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from rest_framework.renderers import JSONRenderer
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from weasyprint import HTML
 
 
 from ..Models.FacturaModel import Factura
@@ -31,8 +32,10 @@ class FacturaViewSet(viewsets.ModelViewSet):
 
         if download:
             html_content = render_to_string('factura/factura.html', {'factura': factura_data})
-            response = HttpResponse(html_content, content_type='text/html')
-            response['Content-Disposition'] = f'attachment; filename=factura_{id}.html'
+            pdf_file = HTML(string=html_content).write_pdf()
+
+            response = HttpResponse(pdf_file, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename=factura_{id}.pdf'
             return response
 
         if request.accepted_renderer.format == 'html':

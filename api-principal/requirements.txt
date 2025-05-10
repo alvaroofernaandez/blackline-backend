@@ -16,3 +16,4 @@ pillow==11.2.1
 mysqlclient
 requests
 drf-yasg
+weasyprint

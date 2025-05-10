@@ -20,6 +20,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'diseño_por_id': 'http://api-principal:8001/api/diseños/{id}/',
             'citas': 'http://api-principal:8001/api/citas/',
             'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',
+            'citas_tramo_horario': 'http://api-principal:8001/api/citas/tramo_horario/',
             'noticias': 'http://noticiero-api:8002/noticias/',
             'noticias_por_id': 'http://noticiero-api:8002/noticias/{id}/',
             'noticias_documentacion': 'http://noticiero-api:8002/swagger/?format=openapi',
@@ -60,6 +61,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'cita_por_id': 'http://api-principal:8001/api/citas/{id}/',
             'noticias': 'http://noticiero-api:8002/noticias/{id}/',
             'sorteos': 'http://sorteos-api:8003/api/sorteos/{id}/',
+            'facturas': 'http://api-principal:8001/api/facturas/{id}/',
         }
     }
 
@@ -69,14 +71,15 @@ def route_request(request, service_name=None, id=None, **kwargs):
     if metodo not in servicios or service_name not in servicios[metodo]:
         return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'}, status=404)
 
-    url_final = servicios[metodo][service_name]
+    url_template = servicios[metodo][service_name]
 
-    # Validación si se requiere un id pero no se ha proporcionado
-    if '{id}' in url_final and not id:
-        return JsonResponse({'error': 'Se requiere un id en la solicitud.'}, status=400)
-
-    if id:
-        url_final = url_final.format(id=id)
+    # Si la URL contiene '{id}', verificamos si se proporcionó un 'id' y lo formateamos
+    if '{id}' in url_template:
+        if not id:
+            return JsonResponse({'error': 'Se requiere un id en la solicitud.'}, status=400)
+        url_final = url_template.format(id=id)
+    else:
+        url_final = url_template
 
     headers = {
         'Authorization': request.headers.get('Authorization', ''),
@@ -88,7 +91,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             method=metodo,
             url=url_final,
             headers=headers,
-            data=request.body if metodo in ['POST', 'PUT', 'PATCH'] else None,
+            data=request.body if metodo in ['POST', 'PUT', 'PATCH', 'DELETE'] else None,
             params=request.GET.dict() if metodo == 'GET' else None
         )
 

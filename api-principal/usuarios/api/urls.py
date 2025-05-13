@@ -9,9 +9,9 @@ router = DefaultRouter()
 router.register(r'usuarios', UserViewSet, basename='usuarios')
 router.register(r'facturas', FacturaViewSet, basename='facturas')
 router.register(r'citas', CitasViewSet, basename='citas')
+router.register(r'diseños', DiseñoView, basename='diseños')
+
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('diseños/', DiseñoView.as_view(), name='diseños'),
-    path('diseños/<int:pk>/', DiseñoView.as_view(), name='diseños'),
 ]

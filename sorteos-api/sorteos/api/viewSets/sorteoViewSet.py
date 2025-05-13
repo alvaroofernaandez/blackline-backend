@@ -6,15 +6,13 @@ import mongoengine as me
 
 from ..models.sorteoModel import Sorteo
 from ..serializers.sorteoSerializer import SorteoSerializer
-from ..permissions import IsAdminUser, IsNormalUser
+from ..permissions import IsAdminUser, IsNormalUser, IsViewUser
 
 class SorteoViewSet(viewsets.ViewSet):
     permission_classes = []
 
     def get_permissions(self):
-        if self.action == 'list':
-            return [IsNormalUser()]
-        elif self.action in ['create', 'update', 'destroy', 'seleccionar_ganador', 'asignar_premio']:
+        if self.action in ['create', 'update', 'destroy', 'seleccionar_ganador', 'asignar_premio']:
             return [IsAdminUser()]
         return []
 

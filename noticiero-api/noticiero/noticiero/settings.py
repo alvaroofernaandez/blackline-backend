@@ -149,11 +149,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+'''
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.CustomJWTAuthentication.CustomJWTAuthentication',
     ],
 }
+'''
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),

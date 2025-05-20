@@ -17,3 +17,4 @@ mysqlclient
 requests
 drf-yasg
 weasyprint
+python-decouple

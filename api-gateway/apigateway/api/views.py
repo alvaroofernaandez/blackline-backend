@@ -56,6 +56,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'modificar_nombre_instagram': 'http://api-principal:8001/api/usuarios/modificar-instagram-username/',
             'sorteos_seleccionar_ganador': 'http://sorteos-api:8003/api/sorteos/{id}/seleccionar_ganador/',
             'sorteos_asignar_premio': 'http://sorteos-api:8003/api/sorteos/{id}/asignar_premio/',
+            'modificar_contrasena':'http://api-principal:8001/api/usuarios/modificar_contrasena/',
         },
         'DELETE': {
             'usuarios': 'http://api-principal:8001/api/usuarios/eliminar_User/?id_usuario={id}',

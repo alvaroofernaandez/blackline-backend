@@ -182,7 +182,7 @@ class SendEmailsAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 class SendEmailWhenPasswordResetAPIView(APIView):
-    def get(self, request):
+    def post(self, request):
         correo = request.data.get("correo")
 
         if not correo:

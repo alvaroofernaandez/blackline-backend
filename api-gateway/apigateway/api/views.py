@@ -11,7 +11,6 @@ def route_request(request, service_name=None, id=None, **kwargs):
     servicios = {
         'GET': {
             'usuarios': 'http://api-principal:8001/api/usuarios/',
-            'change_password': 'http://api-principal:8001/api/send-email-password-reset/',
             'facturas': 'http://api-principal:8001/api/facturas/',
             'detalle_facturas': 'http://api-principal:8001/api/facturas/detalle/',
             'principal_documentacion': 'http://api-principal:8001/swagger/?format=openapi',
@@ -32,6 +31,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
         },
         'POST': {
             'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',
+            'change_password': 'http://api-principal:8001/api/send-email-password-reset/',
             'facturas': 'http://api-principal:8001/api/facturas/',
             'enviar_correos_masivos': 'http://api-principal:8001/api/send-emails/',
             'enviar_correos_personalizados': 'http://api-principal:8001/api/send-single-email/',

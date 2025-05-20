@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from ..models import User
 from django.core.mail import send_mail
 from ..Serializers.UserSerializer import UsuarioSerializer
@@ -179,6 +181,57 @@ class SendEmailsAPIView(APIView):
                 {"error": f"Error al enviar correos: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+class SendEmailWhenPasswordResetAPIView(APIView):
+    def get(self, request):
+        correo = request.data.get("correo")
+
+        if not correo:
+            return Response(
+                {"error": "Por favor, proporciona un correo."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            usuario = User.objects.get(email=correo)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "El correo proporcionado no existe."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        token = RefreshToken.for_user(usuario)
+        token['id'] = str(usuario.id)
+        token['username'] = usuario.username
+        token['email'] = usuario.email
+        token['role'] = usuario.role
+
+        reset_url = f"http://localhost:4321/cambiar_contrasena/?token={str(token.access_token)}"
+
+        asunto = "Cambio de contraseña"
+        mensaje = f"Para cambiar tu contraseña, haz clic en el siguiente enlace:\n{reset_url}"
+
+        try:
+            send_mail(
+                subject=asunto,
+                message=mensaje,
+                from_email="jdeomoya@gmail.com",
+                recipient_list=[correo],
+                fail_silently=False,
+            )
+            respuesta = {
+                "mensaje": "Correo enviado exitosamente.",
+                "correo_persona": correo,
+            }
+
+            return Response(respuesta, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": f"Error al enviar el correo: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 
 class UserCreateAPIView(APIView):
     def getUserById(self,request):

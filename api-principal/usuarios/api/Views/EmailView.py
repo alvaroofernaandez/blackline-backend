@@ -1,15 +1,14 @@
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from rest_framework import generics, status
 from rest_framework.decorators import action
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from ..models import User
-from django.core.mail import send_mail
 from ..Serializers.UserSerializer import UsuarioSerializer
 from .utils import send_email_users_where_allowed
-from django.template.loader import render_to_string
 
 
 class SendSingleEmailAPIView(APIView):

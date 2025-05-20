@@ -1,18 +1,16 @@
-from rest_framework import viewsets, status
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from django.shortcuts import redirect, render, get_object_or_404
-from rest_framework.renderers import JSONRenderer
-from django.template.loader import render_to_string
-from django.http import HttpResponse
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.response import Response
 from weasyprint import HTML
 
-
+from ..Models.CitaModel import Cita
 from ..Models.FacturaModel import Factura
 from ..Serializers.FacturaSerializer import FacturaSerializer
-from ..Models.CitaModel import Cita
 
 
 class FacturaViewSet(viewsets.ModelViewSet):

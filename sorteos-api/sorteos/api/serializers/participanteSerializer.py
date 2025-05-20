@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class ParticipanteSerializer(serializers.Serializer):
     instagram_username = serializers.CharField(required=True, max_length=255)
     requirements = serializers.BooleanField(required=True)

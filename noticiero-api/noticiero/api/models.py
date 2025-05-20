@@ -1,5 +1,7 @@
-import mongoengine as me
 import datetime
+
+import mongoengine as me
+
 
 class Noticias(me.Document):
     titulo = me.StringField(max_length=255, required=True)

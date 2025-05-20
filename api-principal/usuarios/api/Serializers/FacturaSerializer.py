@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from ..Models.FacturaModel import Factura
+
 from ..Models.CitaModel import Cita
+from ..Models.FacturaModel import Factura
+
 
 class FacturaSerializer(serializers.ModelSerializer):
     class Meta:

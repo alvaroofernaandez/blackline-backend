@@ -1,6 +1,8 @@
 from rest_framework import serializers
+
 from ..models.sorteoModel import ESTADOS_SORTEOS
 from .participanteSerializer import ParticipanteSerializer
+
 
 class SorteoSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)

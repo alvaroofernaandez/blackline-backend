@@ -1,11 +1,13 @@
 # En tu archivo de vistas
-from rest_framework.permissions import IsAdminUser
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from ..Models.DiseñoModel import Design
+from ..permissions import IsAdminUser, IsNormalUser
 from ..Serializers.DiseñoSerializer import DiseñoSerializer
-from ..permissions import IsNormalUser, IsAdminUser
+
 
 class DiseñoView(viewsets.ModelViewSet):
     queryset = Design.objects.all()

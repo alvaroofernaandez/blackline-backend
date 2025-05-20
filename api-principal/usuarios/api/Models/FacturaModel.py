@@ -1,8 +1,11 @@
-from django.db import models
-from django.core.exceptions import ValidationError
 from datetime import date
+
+from django.core.exceptions import ValidationError
+from django.db import models
+
 from ..models import User
 from ..Models.CitaModel import Cita
+
 
 class Factura(models.Model):
     cliente = models.ForeignKey(User, on_delete=models.CASCADE, related_name='facturas')

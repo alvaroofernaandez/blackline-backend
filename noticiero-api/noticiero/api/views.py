@@ -1,8 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
+
 from .models import Noticias
-from .serializers import NoticiasSerializer
 from .permissions import IsAdminUser, IsNormalUser
+from .serializers import NoticiasSerializer
+
 
 class NoticiasViewSet(viewsets.ModelViewSet):
     queryset = Noticias.objects.all()

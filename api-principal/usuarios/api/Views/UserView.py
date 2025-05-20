@@ -1,12 +1,15 @@
 from django.contrib.sites import requests
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from ..permissions import IsAdminUser, IsNormalUser
-from rest_framework.response import Response
-from ..models import User
-from ..Serializers.UserSerializer import UsuarioSerializer
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
+
+from ..models import User
+from ..permissions import IsAdminUser, IsNormalUser
+from ..Serializers.UserSerializer import UsuarioSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -166,7 +169,38 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({"mensaje": f"Usuario con id {usuario.id} modificado correctamente"},
                         status=status.HTTP_200_OK)
 
-    # Metodo para eliminar Usuarios
+    @action(detail=False, methods=['patch'])
+    def modificar_contrasena(self, request):
+        nueva_contrasena = request.data.get('nueva_contrasena')
+        token_str = request.data.get('token')
+
+        if not nueva_contrasena or not token_str:
+            return Response(
+                {"error": "Los campos 'nueva_contrasena' y 'token' son obligatorios"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            token = AccessToken(token_str)
+        except Exception:
+            return Response({"error": "Token inválido o expirado"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        id_usuario = token['id']  # Aquí extraemos el id directamente del token
+
+        try:
+            usuario = User.objects.get(id=id_usuario)
+            usuario.set_password(nueva_contrasena)
+            usuario.save()
+
+            return Response(
+                {"mensaje": f"Contraseña del usuario con id {id_usuario} modificada correctamente"},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Usuario con id {id_usuario} no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
     @action(detail=False, methods=['delete'], permission_classes=[IsAdminUser])
     def eliminar_User(self,request):
         id_usuario = request.query_params.get('id_usuario')

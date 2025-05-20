@@ -1,7 +1,10 @@
 import random
-import mongoengine as me
 from datetime import datetime
-from .participanteModel import Participante  # Asegúrate de que esté en el mismo paquete
+
+import mongoengine as me
+
+from .participanteModel import \
+    Participante  # Asegúrate de que esté en el mismo paquete
 
 ESTADOS_SORTEOS = ('activo', 'finalizado')
 

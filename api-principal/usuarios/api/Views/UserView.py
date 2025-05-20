@@ -1,12 +1,14 @@
 from django.contrib.sites import requests
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from ..permissions import IsAdminUser, IsNormalUser
-from rest_framework.response import Response
-from ..models import User
-from ..Serializers.UserSerializer import UsuarioSerializer
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from ..models import User
+from ..permissions import IsAdminUser, IsNormalUser
+from ..Serializers.UserSerializer import UsuarioSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

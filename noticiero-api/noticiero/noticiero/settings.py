@@ -109,6 +109,7 @@ DATABASES = {
 
 
 from mongoengine import connect
+
 connect(
     db='noticiero_db',
     host='mongodb',

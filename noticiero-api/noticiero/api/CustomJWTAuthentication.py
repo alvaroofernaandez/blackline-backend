@@ -1,5 +1,6 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+
 class SimpleUser:
     def __init__(self, payload):
         self.payload = payload

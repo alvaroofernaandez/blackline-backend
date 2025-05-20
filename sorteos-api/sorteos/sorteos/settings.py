@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+
 from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -90,6 +91,7 @@ DATABASES = {
 }
 
 from mongoengine import connect
+
 connect(
     db='sorteos_db',
     host='mongodb',

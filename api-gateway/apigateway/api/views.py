@@ -1,6 +1,7 @@
 import requests
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
+
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def route_request(request, service_name=None, id=None, **kwargs):

@@ -1,5 +1,6 @@
 import mongoengine as me
 
+
 class Participante(me.EmbeddedDocument):
     instagram_username = me.StringField(required=True, min_length=1)
     requirements = me.BooleanField(required=True)

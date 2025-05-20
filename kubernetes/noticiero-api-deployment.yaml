@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: noticiero-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: noticiero-api
+  template:
+    metadata:
+      labels:
+        app: noticiero-api
+    spec:
+      containers:
+        - name: noticiero-api
+          image: back-tfg-noticiero-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8002
+          env:
+            - name: MONGO_HOST
+              value: mongodb
+            - name: MONGO_PORT
+              value: "27017"
+            - name: MONGO_DB
+              value: noticiero_db
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]

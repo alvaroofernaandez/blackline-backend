@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-principal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-principal
+  template:
+    metadata:
+      labels:
+        app: api-principal
+    spec:
+      containers:
+        - name: api-principal
+          image: back-tfg-api-principal:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DB_HOST
+              value: mysql
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: principal_db
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              value: root_password

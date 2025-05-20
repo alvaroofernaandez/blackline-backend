@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-vmq!p^-r58au$56h4rtjis5wfwk=8^=!-p4x(+icag$e2ib6o=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4321",  
+    "http://localhost:4321",
 ]
 
 

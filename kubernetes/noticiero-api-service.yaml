@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: noticiero-api
+spec:
+  selector:
+    app: noticiero-api
+  ports:
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002

@@ -38,7 +38,7 @@ class SendSingleEmailAPIView(APIView):
             send_mail(
                 subject=asunto,
                 message=mensaje,
-                from_email="jdeomoya@gmail.com",
+                from_email="blacklineblackline2@gmail.com",
                 recipient_list=[correo],
                 fail_silently=False,
                 html_message=email_body
@@ -80,7 +80,7 @@ class SendEmailsAPIView(APIView):
                 send_mail(
                     subject=asunto,
                     message=mensaje,
-                    from_email="jdeomoya@gmail.com",
+                    from_email="blacklineblackline2@gmail.com",
                     recipient_list=[correo],
                     html_message=html_message,
                     fail_silently=False,
@@ -116,7 +116,7 @@ class SendEmailsAPIView(APIView):
             send_mail(
                 subject=asunto,
                 message=mensaje,
-                from_email="jdeomoya@gmail.com",
+                from_email="blacklineblackline2@gmail.com",
                 recipient_list=[correo],
                 fail_silently=False,
                 html_message=email_body
@@ -162,7 +162,7 @@ class SendEmailsAPIView(APIView):
             send_mail(
                 subject=asunto,
                 message=mensaje,
-                from_email="jdeomoya@gmail.com",
+                from_email="blacklineblackline2@gmail.com",
                 recipient_list=correos_validos,
                 fail_silently=False,
             )
@@ -213,7 +213,7 @@ class SendEmailWhenPasswordResetAPIView(APIView):
             send_mail(
                 subject=asunto,
                 message=mensaje,
-                from_email="jdeomoya@gmail.com",
+                from_email="blacklineblackline2@gmail.com",
                 recipient_list=[correo],
                 fail_silently=False,
             )

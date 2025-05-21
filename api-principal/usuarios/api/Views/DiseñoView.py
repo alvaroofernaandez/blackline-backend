@@ -12,7 +12,7 @@ from ..Serializers.DiseñoSerializer import DiseñoSerializer
 class DiseñoView(viewsets.ModelViewSet):
     queryset = Design.objects.all()
     serializer_class = DiseñoSerializer
-    permission_classes = [IsAdminUser]
+#    permission_classes = [IsNormalUser]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

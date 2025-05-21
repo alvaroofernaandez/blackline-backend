@@ -16,3 +16,7 @@ mysqlclient
 requests
 drf-yasg
 weasyprint
+pytest
+pytest-django
+pytest-cov
+pytest-drf

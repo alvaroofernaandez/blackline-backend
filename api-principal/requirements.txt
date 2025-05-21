@@ -18,3 +18,7 @@ requests
 drf-yasg
 weasyprint
 python-decouple
+pytest
+pytest-django
+pytest-cov
+pytest-drf

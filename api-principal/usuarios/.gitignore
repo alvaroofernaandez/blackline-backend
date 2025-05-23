@@ -18,3 +18,5 @@ db.sqlite3
 
 # Ignorar datos estáticos generados
 /static/
+
+/media/

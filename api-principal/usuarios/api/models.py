@@ -36,7 +36,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, blank=False, null=False, verbose_name="Correo electrónico")
     can_receive_emails = models.BooleanField(default=False)
     password = models.CharField(max_length=128, null=False, verbose_name="Contraseña")
-    foto_perfil = models.CharField(max_length=255, null=True, blank=True, verbose_name="Foto de perfil")
     instagram_username = models.CharField(max_length=100, null=True, blank=True, unique=True)
     telefono = models.CharField(max_length=20, null=True, blank=True, verbose_name="Teléfono")
     direccion = models.CharField(max_length=255, null=True, blank=True, verbose_name="Dirección")

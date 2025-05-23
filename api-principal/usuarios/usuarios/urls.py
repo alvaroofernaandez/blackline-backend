@@ -12,6 +12,9 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = DefaultRouter()
 router.register(r'usuarios', UserViewSet, basename='usuario')
 
@@ -41,3 +44,6 @@ urlpatterns = [
     path('api/send-email-password-reset/', SendEmailWhenPasswordResetAPIView.as_view(), name='send_email_password_reset'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,7 +4,7 @@ from datetime import datetime
 import mongoengine as me
 
 from .participanteModel import \
-    Participante  # Asegúrate de que esté en el mismo paquete
+    Participante
 
 ESTADOS_SORTEOS = ('activo', 'finalizado')
 

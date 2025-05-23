@@ -8,7 +8,6 @@ def route_request(request, service_name=None, id=None, **kwargs):
     if not service_name:
         service_name = kwargs.get('service_name')
 
-    # Definición de servicios
     servicios = {
         'GET': {
             'usuarios': 'http://api-principal:8001/api/usuarios/',
@@ -70,13 +69,11 @@ def route_request(request, service_name=None, id=None, **kwargs):
 
     metodo = request.method.upper()
 
-    # Verificación de si la ruta y método existen en los servicios
     if metodo not in servicios or service_name not in servicios[metodo]:
         return JsonResponse({'error': 'Ruta no encontrada o método no soportado.'}, status=404)
 
     url_template = servicios[metodo][service_name]
 
-    # Si la URL contiene '{id}', verificamos si se proporcionó un 'id' y lo formateamos
     if '{id}' in url_template:
         if not id:
             return JsonResponse({'error': 'Se requiere un id en la solicitud.'}, status=400)
@@ -98,17 +95,14 @@ def route_request(request, service_name=None, id=None, **kwargs):
             params=request.GET.dict() if metodo == 'GET' else None
         )
 
-        # Verificar si la respuesta es 204 (sin contenido)
         if response.status_code == 204:
             return JsonResponse({}, status=204)
 
         content_type = response.headers.get('Content-Type', '')
         content_disposition = response.headers.get('Content-Disposition', '')
 
-        # Verificar si se está pidiendo una descarga
         download = request.GET.get('download', '0')
 
-        # Si 'download=1', forzamos la descarga
         if download == '1' or 'attachment' in content_disposition:
             if not content_disposition:
                 content_disposition = 'attachment'
@@ -121,11 +115,9 @@ def route_request(request, service_name=None, id=None, **kwargs):
             resp['Content-Disposition'] = content_disposition
             return resp
 
-        # Si no es descarga, devolvemos la respuesta en formato JSON
         if 'application/json' in content_type:
             return JsonResponse(response.json(), status=response.status_code, safe=False)
 
-        # En caso contrario, simplemente devolvemos el contenido tal cual
         return HttpResponse(
             response.content,
             status=response.status_code,

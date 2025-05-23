@@ -19,9 +19,6 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
-# router = DefaultRouter()
-# router.register(r'noticias', NoticiasViewSet, basename='noticias')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),

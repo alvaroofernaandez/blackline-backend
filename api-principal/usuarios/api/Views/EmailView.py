@@ -157,7 +157,6 @@ class SendEmailsAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        # Enviar el correo a los usuarios encontrados
         try:
             send_mail(
                 subject=asunto,
@@ -229,8 +228,6 @@ class SendEmailWhenPasswordResetAPIView(APIView):
                 {"error": f"Error al enviar el correo: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
 
 class UserCreateAPIView(APIView):
     def getUserById(self,request):

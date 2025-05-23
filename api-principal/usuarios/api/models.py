@@ -15,7 +15,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    # Funcion para crear un admin
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -45,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=10, choices=ROLES, default=USER)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  # Necesario para usuarios administradores
+    is_staff = models.BooleanField(default=False) 
     date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()

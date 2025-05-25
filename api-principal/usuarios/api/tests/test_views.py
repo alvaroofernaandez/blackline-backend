@@ -129,3 +129,43 @@ def test_modificar_can_receive_emails_user_not_found():
     response = client.patch(url, data)
     assert response.status_code == 404
 
+
+@pytest.mark.django_db
+def test_modificar_user_not_found():
+    admin = User.objects.create_user(username="admin", email="admin@example.com", password="pass", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=admin)
+
+    data = {"id_usuario": 9999, "nombre": "NuevoNombre"}
+    url = "/api/usuarios/modificar_user/"
+    response = client.put(url, data, format="json")
+    assert response.status_code == 404
+@pytest.mark.django_db
+def test_modificar_contrasena_invalid_token():
+    client = APIClient()
+    data = {
+        "nueva_contrasena": "newpassword123",
+        "token": "token_invalido"
+    }
+    url = "/api/usuarios/modificar_contrasena/"
+    response = client.patch(url, data, format="json")
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_modificar_contrasena_missing_fields():
+    client = APIClient()
+    data = {"nueva_contrasena": "newpassword123"}  # falta token
+    url = "/api/usuarios/modificar_contrasena/"
+    response = client.patch(url, data, format="json")
+    assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_eliminar_user_not_found():
+    admin = User.objects.create_user(username="admin", email="admin@example.com", password="pass", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=admin)
+
+    url = "/api/usuarios/eliminar_user/?id_usuario=9999"
+    response = client.delete(url)
+    assert response.status_code == 404

@@ -16,8 +16,15 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
 
 
+<<<<<<< HEAD
     @action(detail=False, methods=['post'])
     def registrar_User(self, request):
+=======
+    # Metodo para añadir un usuario
+
+    @action(detail=False, methods=['post'], url_path='registrar_user', name='registrar_user')
+    def registrar_user(self, request):
+>>>>>>> 61fbe17 (fix: test sobre el usuario funcionando)
         contenido = {
             'username': str(request.data.get('username', '')).strip(),
             'email': str(request.data.get('email', '')).strip(),

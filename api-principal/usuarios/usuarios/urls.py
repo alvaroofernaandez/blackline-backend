@@ -35,8 +35,13 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
     path('api/', include(router.urls)),  
     path('api/', include('api.urls')), 
+=======
+    path('api/', include(router.urls)),
+    path('api/', include('api.urls')),
+>>>>>>> 61fbe17 (fix: test sobre el usuario funcionando)
     path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),

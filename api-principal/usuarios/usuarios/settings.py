@@ -6,6 +6,15 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+<<<<<<< HEAD
+=======
+SWAGGER_USE_COMPAT_RENDERERS = False
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+>>>>>>> 61fbe17 (fix: test sobre el usuario funcionando)
 SECRET_KEY = 'django-insecure-ot2yxq)jpk!*99k2!w++fw!%bt!vm(jre5jer+e=#q#s*=_qqs'
 
 DEBUG = True
@@ -33,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
-    'drf_yasg'
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

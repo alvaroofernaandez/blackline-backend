@@ -283,3 +283,37 @@ def test_get_tramo_horario_with_fecha():
 '''
     Tests de Diseño
 '''
+
+@pytest.mark.django_db
+def test_list_disenos():
+    client = APIClient()
+    Design.objects.create(titulo="Diseño 1", descripcion="Desc 1", alto=100, ancho=100)
+    Design.objects.create(titulo="Diseño 2", descripcion="Desc 2", alto=200, ancho=200)
+
+    url = "/api/diseños/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert len(response.data) >= 2
+
+@pytest.mark.django_db
+def test_retrieve_diseno():
+    diseno = Design.objects.create(titulo="Diseño Retrieve", descripcion="Desc", alto=100, ancho=100)
+    client = APIClient()
+
+    url = f"/api/diseños/{diseno.id}/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.data['id'] == diseno.id
+
+@pytest.mark.django_db
+def test_delete_diseno():
+    diseno = Design.objects.create(titulo="Diseño Delete", descripcion="Desc", alto=100, ancho=100)
+    client = APIClient()
+
+    url = f"/api/diseños/{diseno.id}/"
+    response = client.delete(url)
+
+    assert response.status_code == 204
+    assert not Design.objects.filter(id=diseno.id).exists()

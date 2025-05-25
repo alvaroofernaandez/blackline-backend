@@ -1,4 +1,3 @@
-from django.contrib.sites import requests
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from rest_framework import status, viewsets
@@ -7,24 +6,17 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from ..models import User
-from ..permissions import IsAdminUser, IsNormalUser
 from ..Serializers.UserSerializer import UsuarioSerializer
+from ..permissions import IsAdminUser, IsNormalUser
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
 
-
-<<<<<<< HEAD
-    @action(detail=False, methods=['post'])
-    def registrar_User(self, request):
-=======
-    # Metodo para añadir un usuario
-
+    # Método para añadir un usuario
     @action(detail=False, methods=['post'], url_path='registrar_user', name='registrar_user')
     def registrar_user(self, request):
->>>>>>> 61fbe17 (fix: test sobre el usuario funcionando)
         contenido = {
             'username': str(request.data.get('username', '')).strip(),
             'email': str(request.data.get('email', '')).strip(),
@@ -34,18 +26,24 @@ class UserViewSet(viewsets.ModelViewSet):
 
         for key in ['email', 'password', 'can_receive_emails']:
             if key not in request.data or request.data[key] in [None, '']:
-                return Response({"error": f"El campo '{key}' es obligatorio."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"error": f"El campo '{key}' es obligatorio."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         try:
             EmailValidator()(contenido['email'])
         except ValidationError:
-            return Response({"error": "El campo 'email' no tiene el formato correcto."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "El campo 'email' no tiene el formato correcto."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if User.objects.filter(email=contenido['email']).exists():
-            return Response({"error": "El email ya existe. Pruebe con otro."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "El email ya existe. Pruebe con otro."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
             usuario = User(
@@ -56,11 +54,15 @@ class UserViewSet(viewsets.ModelViewSet):
             usuario.set_password(contenido['password'])
             usuario.save()
 
-            return Response({"mensaje": f"El usuario con el id {usuario.pk} ha sido añadido correctamente"},
-                            status=status.HTTP_201_CREATED)
+            return Response(
+                {"mensaje": f"El usuario con el id {usuario.pk} ha sido añadido correctamente"},
+                status=status.HTTP_201_CREATED
+            )
         except Exception as e:
-            return Response({"error": f"Error al crear el usuario: {str(e)}"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": f"Error al crear el usuario: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     @action(detail=False, methods=['patch'], url_path='modificar-instagram-username')
     def modificar_instagram_username(self, request):

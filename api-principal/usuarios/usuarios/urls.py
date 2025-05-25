@@ -9,16 +9,13 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView)
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register(r'usuarios', UserViewSet, basename='usuario')
-
-
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -35,19 +32,14 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('api/', include(router.urls)),  
-    path('api/', include('api.urls')), 
-=======
     path('api/', include(router.urls)),
     path('api/', include('api.urls')),
->>>>>>> 61fbe17 (fix: test sobre el usuario funcionando)
     path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/send-emails/', SendEmailsAPIView.as_view(), name='send_emails'),
     path('api/send-single-email/', SendSingleEmailAPIView.as_view(), name='send_single_email'),
     path('api/send-email-password-reset/', SendEmailWhenPasswordResetAPIView.as_view(), name='send_email_password_reset'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
 if settings.DEBUG:

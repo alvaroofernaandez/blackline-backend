@@ -1,8 +1,8 @@
-# En tu archivo de vistas
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from ..Models.DiseñoModel import Design
 from ..permissions import IsAdminUser, IsNormalUser
@@ -12,7 +12,7 @@ from ..Serializers.DiseñoSerializer import DiseñoSerializer
 class DiseñoView(viewsets.ModelViewSet):
     queryset = Design.objects.all()
     serializer_class = DiseñoSerializer
-#    permission_classes = [IsNormalUser]
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

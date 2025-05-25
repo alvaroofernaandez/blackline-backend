@@ -7,7 +7,6 @@ from ..models import User
 class UsuarioSerializer(serializers.ModelSerializer):
 
     def comprobarEmail(self, value):
-        # Validamos que el email tenga un formato correcto
         if '@' not in value:
             raise ValidationError("El campo email no tiene el formato correcto")
         return value

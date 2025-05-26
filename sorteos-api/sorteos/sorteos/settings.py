@@ -58,7 +58,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sorteos.wsgi.application'
-
+SWAGGER_USE_COMPAT_RENDERERS = False
 
 DATABASES = {
     'default': {
@@ -71,11 +71,37 @@ from mongoengine import connect
 connect(
     db='sorteos_db',
     host='mongodb',
-    port=27017
+    port=27017,
+    uuidRepresentation='standard'
 )
 
-
-print("Conexión exitosa")
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -118,3 +144,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = ['sorteos-api', 'localhost', '127.0.0.1', '0.0.0.0', 'http://localhost:8000', 'http://localhost:8000']
+

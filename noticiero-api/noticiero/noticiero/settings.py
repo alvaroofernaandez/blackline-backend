@@ -58,19 +58,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'noticiero.wsgi.application'
 
-
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'noticiero',  # Nombre de tu base de datos en MongoDB
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017',  # Ajusta según tu configuración
-        }
-    }
-}
-'''
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -116,13 +103,33 @@ USE_I18N = True
 
 USE_TZ = True
 
-'''
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.CustomJWTAuthentication.CustomJWTAuthentication',
-    ],
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
 }
-'''
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),

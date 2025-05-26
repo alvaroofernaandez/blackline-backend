@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from .models import Noticias
 
 class NoticiasSerializer(serializers.Serializer):
@@ -7,10 +6,12 @@ class NoticiasSerializer(serializers.Serializer):
     titulo = serializers.CharField()
     descripcion = serializers.CharField(allow_blank=True, required=False)
     imagen = serializers.CharField(allow_blank=True, required=False)
-    fecha = serializers.DateTimeField()
+    fecha = serializers.DateTimeField(read_only=True)  
 
     def create(self, validated_data):
-        return Noticias(**validated_data).save()
+        instance = Noticias(**validated_data)
+        instance.save()
+        return instance
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():

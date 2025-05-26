@@ -1,9 +1,17 @@
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from django.urls import reverse
 from api.models import User
+from api.Models.CitaModel import Cita
+from api.Models.DiseñoModel import Design
+from api.Models.FacturaModel import Factura
 from rest_framework_simplejwt.tokens import AccessToken
 
+
+'''
+    Tests del Usuario
+'''
 @pytest.mark.django_db
 def test_registrar_user_ok():
     client = APIClient()
@@ -129,3 +137,183 @@ def test_modificar_can_receive_emails_user_not_found():
     response = client.patch(url, data)
     assert response.status_code == 404
 
+
+@pytest.mark.django_db
+def test_modificar_user_not_found():
+    admin = User.objects.create_user(username="admin", email="admin@example.com", password="pass", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=admin)
+
+    data = {"id_usuario": 9999, "nombre": "NuevoNombre"}
+    url = "/api/usuarios/modificar_user/"
+    response = client.put(url, data, format="json")
+    assert response.status_code == 404
+@pytest.mark.django_db
+def test_modificar_contrasena_invalid_token():
+    client = APIClient()
+    data = {
+        "nueva_contrasena": "newpassword123",
+        "token": "token_invalido"
+    }
+    url = "/api/usuarios/modificar_contrasena/"
+    response = client.patch(url, data, format="json")
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_modificar_contrasena_missing_fields():
+    client = APIClient()
+    data = {"nueva_contrasena": "newpassword123"}  # falta token
+    url = "/api/usuarios/modificar_contrasena/"
+    response = client.patch(url, data, format="json")
+    assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_eliminar_user_not_found():
+    admin = User.objects.create_user(username="admin", email="admin@example.com", password="pass", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=admin)
+
+    url = "/api/usuarios/eliminar_user/?id_usuario=9999"
+    response = client.delete(url)
+    assert response.status_code == 404
+
+'''
+    Tests de Cita
+'''
+@pytest.mark.django_db
+def test_list_citas():
+    client = APIClient()
+    solicitante = User.objects.create_user(username="juan123", email="juan@example.com", password="testpassword")
+
+    image_file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
+    design = Design.objects.create(
+        image=image_file,
+        titulo="Design 1",
+        descripcion="Descripción del diseño",
+        alto=100,
+        ancho=100
+    )
+
+    Cita.objects.create(fecha="2025-05-25", hora="1", solicitante=solicitante, design=design)
+    Cita.objects.create(fecha="2025-05-25", hora="2", solicitante=solicitante, design=design)
+
+    url = "/api/citas/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert len(response.data) >= 2
+
+
+@pytest.mark.django_db
+def test_retrieve_cita_ok():
+    solicitante = User.objects.create_user(username="juan123", email="juan@example.com", password="testpassword")
+
+    image_file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
+    design = Design.objects.create(
+        image=image_file,
+        titulo="Design 1",
+        descripcion="Descripción del diseño",
+        alto=100,
+        ancho=100
+    )
+
+    cita = Cita.objects.create(fecha="2025-05-25", hora="1", solicitante=solicitante, design=design)
+    client = APIClient()
+
+    url = f"/api/citas/{cita.id}/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.data['id'] == cita.id
+
+
+@pytest.mark.django_db
+def test_create_cita_ok():
+    client = APIClient()
+    solicitante = User.objects.create_user(username="juan123", email="juan@example.com", password="testpassword")
+
+    image_file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
+    design = Design.objects.create(
+        image=image_file,
+        titulo="Design 1",
+        descripcion="Descripción del diseño",
+        alto=100,
+        ancho=100
+    )
+
+    data = {
+        "fecha": "2025-05-25",
+        "hora": "1",
+        "solicitante": solicitante.id,
+        "design": design.id
+    }
+
+    url = "/api/citas/"
+    response = client.post(url, data, format='json')
+
+    assert response.status_code == 201
+    assert response.data['fecha'] == data['fecha']
+    assert response.data['hora'] == data['hora']
+
+
+@pytest.mark.django_db
+def test_get_tramo_horario_with_fecha():
+    client = APIClient()
+    solicitante = User.objects.create_user(username="juan123", email="juan@example.com", password="testpassword")
+
+    image_file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
+    design = Design.objects.create(
+        image=image_file,
+        titulo="Design 1",
+        descripcion="Descripción del diseño",
+        alto=100,
+        ancho=100
+    )
+
+    Cita.objects.create(fecha="2025-05-25", hora="1", solicitante=solicitante, design=design)
+
+    url = "/api/citas/tramo_horario/"
+    response = client.get(url, {'fecha': '2025-05-25'})
+
+    assert response.status_code == 200
+    assert response.data['1'] is False
+    assert response.data['2'] is True
+
+'''
+    Tests de Diseño
+'''
+
+@pytest.mark.django_db
+def test_list_disenos():
+    client = APIClient()
+    Design.objects.create(titulo="Diseño 1", descripcion="Desc 1", alto=100, ancho=100)
+    Design.objects.create(titulo="Diseño 2", descripcion="Desc 2", alto=200, ancho=200)
+
+    url = "/api/diseños/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert len(response.data) >= 2
+
+@pytest.mark.django_db
+def test_retrieve_diseno():
+    diseno = Design.objects.create(titulo="Diseño Retrieve", descripcion="Desc", alto=100, ancho=100)
+    client = APIClient()
+
+    url = f"/api/diseños/{diseno.id}/"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.data['id'] == diseno.id
+
+@pytest.mark.django_db
+def test_delete_diseno():
+    diseno = Design.objects.create(titulo="Diseño Delete", descripcion="Desc", alto=100, ancho=100)
+    client = APIClient()
+
+    url = f"/api/diseños/{diseno.id}/"
+    response = client.delete(url)
+
+    assert response.status_code == 204
+    assert not Design.objects.filter(id=diseno.id).exists()

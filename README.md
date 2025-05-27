@@ -46,7 +46,7 @@ Este proyecto representa la capa de servidor de la aplicación **Blackline**, de
 3. Accede a la aplicación a través del navegador:
    
     ```bash
-    http://localhost:4321
+    http://localhost:8000
    ```
 ## 🤝Contribuciones
 

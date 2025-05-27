@@ -12,6 +12,7 @@ pytz==2024.2
 setuptools==75.6.0
 sqlparse==0.2.4
 tzdata==2024.2
+pillow==11.2.1
 mysqlclient
 requests
 drf-yasg

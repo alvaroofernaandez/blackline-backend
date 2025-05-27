@@ -1,18 +1,18 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from api.models import Noticias  # <-- Ajusta el import aquí
+from api.models import Noticias  
 
 class NoticiasAPITests(APITestCase):
     
     def setUp(self):
-        Noticias.drop_collection()  # Esta es la forma correcta con MongoEngine
+        Noticias.drop_collection()  
         self.noticia1 = Noticias.objects.create(titulo='Noticia 1', descripcion='Contenido de Noticia 1')
         self.noticia2 = Noticias.objects.create(titulo='Noticia 2', descripcion='Contenido de Noticia 2')
 
 
     def test_get_noticias_list(self):
-        url = reverse('noticias-list-create')  # Asegúrate de tener este nombre en tu urls.py
+        url = reverse('noticias-list-create')  
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)

@@ -1,6 +1,7 @@
 import requests
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
+from json.decoder import JSONDecodeError
 
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
@@ -55,7 +56,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'modificar_nombre_instagram': 'http://api-principal:8001/api/usuarios/modificar-instagram-username/',
             'sorteos_seleccionar_ganador': 'http://sorteos-api:8003/api/sorteos/{id}/seleccionar_ganador/',
             'sorteos_asignar_premio': 'http://sorteos-api:8003/api/sorteos/{id}/asignar_premio/',
-            'modificar_contrasena':'http://api-principal:8001/api/usuarios/modificar_contrasena/',
+            'modificar_contrasena': 'http://api-principal:8001/api/usuarios/modificar_contrasena/',
         },
         'DELETE': {
             'usuarios': 'http://api-principal:8001/api/usuarios/eliminar_User/?id_usuario={id}',
@@ -83,8 +84,9 @@ def route_request(request, service_name=None, id=None, **kwargs):
 
     headers = {
         'Authorization': request.headers.get('Authorization', ''),
-        'Content-Type': 'application/json'
     }
+    if 'Content-Type' in request.headers:
+        headers['Content-Type'] = request.headers['Content-Type']
 
     try:
         response = requests.request(
@@ -103,7 +105,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
 
         download = request.GET.get('download', '0')
 
-        if download == '1' or 'attachment' in content_disposition:
+        if download == '1' or 'attachment' in content_disposition.lower():
             if not content_disposition:
                 content_disposition = 'attachment'
 
@@ -114,9 +116,26 @@ def route_request(request, service_name=None, id=None, **kwargs):
             )
             resp['Content-Disposition'] = content_disposition
             return resp
+        
+        def replace_internal_urls(data, old, new):
+            if isinstance(data, dict):
+                return {k: replace_internal_urls(v, old, new) for k, v in data.items()}
+            elif isinstance(data, list):
+                return [replace_internal_urls(item, old, new) for item in data]
+            elif isinstance(data, str) and old in data:
+                return data.replace(old, new)
+            return data
 
         if 'application/json' in content_type:
-            return JsonResponse(response.json(), status=response.status_code, safe=False)
+            try:
+                data = response.json()
+
+                if service_name == 'diseños' and metodo == 'GET':
+                    data = replace_internal_urls(data, 'http://api-principal:8001', 'http://localhost:8001')
+
+                return JsonResponse(data, status=response.status_code, safe=False)
+            except (UnicodeDecodeError, JSONDecodeError):
+                return HttpResponse(response.content, status=response.status_code, content_type=content_type)
 
         return HttpResponse(
             response.content,

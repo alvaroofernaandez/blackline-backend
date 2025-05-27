@@ -132,6 +132,8 @@ def route_request(request, service_name=None, id=None, **kwargs):
 
                 if service_name == 'diseños' and metodo == 'GET':
                     data = replace_internal_urls(data, 'http://api-principal:8001', 'http://localhost:8001')
+                elif service_name == 'noticias' and metodo == 'GET':
+                    data = replace_internal_urls(data, 'http://noticiero-api:8002', 'http://localhost:8002')
 
                 return JsonResponse(data, status=response.status_code, safe=False)
             except (UnicodeDecodeError, JSONDecodeError):

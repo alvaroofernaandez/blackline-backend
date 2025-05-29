@@ -31,10 +31,11 @@ jobs:
             cd deploy/blackline-backend/
             echo "🛑 Paramos el contenedor de Docker"
             docker compose down
+            sleep 60
             echo "❌Borramos las imágenes antiguas"
             docker rm -v blackline-backend-api-gateway-1
             docker rm -v blackline-backend-noticiero-api-1
-            docker rm -v blackline-backend-sorteos-api-1-1
+            docker rm -v blackline-backend-sorteos-api-1
             echo "✅ Traemos los cambios de GitHub"
             git pull
             echo "🚀 Arrancamos el contenedor de Docker"

@@ -9,12 +9,11 @@ class NoticiasSerializer(serializers.Serializer):
     titulo = serializers.CharField()
     descripcion = serializers.CharField(allow_blank=True, required=False)
     imagen = serializers.ImageField(required=False, allow_null=True)
-    imagen_url = serializers.SerializerMethodField()  # Para devolver la URL completa
+    imagen_url = serializers.SerializerMethodField()  
     imagen_original_name = serializers.CharField(read_only=True)
     fecha = serializers.DateTimeField(read_only=True)
 
     def get_imagen_url(self, obj):
-        """Devuelve la URL completa de la imagen"""
         if obj.imagen:
             request = self.context.get('request')
             if request:
@@ -27,21 +26,17 @@ class NoticiasSerializer(serializers.Serializer):
         instance = Noticias(**validated_data)
         
         if imagen_file:
-            # Generar un nombre único para el archivo
             file_extension = os.path.splitext(imagen_file.name)[1]
             unique_filename = f"{uuid.uuid4()}{file_extension}"
             
-            # Crear el directorio si no existe
             media_dir = os.path.join(settings.MEDIA_ROOT, 'noticias')
             os.makedirs(media_dir, exist_ok=True)
             
-            # Guardar el archivo
             file_path = os.path.join(media_dir, unique_filename)
             with open(file_path, 'wb') as f:
                 for chunk in imagen_file.chunks():
                     f.write(chunk)
             
-            # Guardar la ruta relativa en el modelo
             instance.imagen = f'noticias/{unique_filename}'
             instance.imagen_original_name = imagen_file.name
         
@@ -51,15 +46,12 @@ class NoticiasSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         imagen_file = validated_data.pop('imagen', None)
         
-        # Si hay una nueva imagen, eliminar la anterior
         if imagen_file:
-            # Eliminar archivo anterior si existe
             if instance.imagen:
                 old_file_path = os.path.join(settings.MEDIA_ROOT, instance.imagen)
                 if os.path.exists(old_file_path):
                     os.remove(old_file_path)
             
-            # Guardar nueva imagen
             file_extension = os.path.splitext(imagen_file.name)[1]
             unique_filename = f"{uuid.uuid4()}{file_extension}"
             
@@ -74,7 +66,6 @@ class NoticiasSerializer(serializers.Serializer):
             instance.imagen = f'noticias/{unique_filename}'
             instance.imagen_original_name = imagen_file.name
         
-        # Actualizar otros campos
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         
@@ -82,9 +73,7 @@ class NoticiasSerializer(serializers.Serializer):
         return instance
 
     def to_representation(self, instance):
-        """Personalizar la representación de la respuesta"""
         data = super().to_representation(instance)
-        # Remover el campo imagen (que contiene datos binarios) de la respuesta
         if 'imagen' in data:
             del data['imagen']
         return data

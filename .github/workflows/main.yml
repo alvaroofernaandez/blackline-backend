@@ -29,15 +29,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
             cd deploy/blackline-backend/
-            echo "🛑 Paramos el contenedor de Docker"
+            echo "🛑 Paramos y eliminamos contenedores de Docker (sin perder la base de datos)"
             docker compose down
-            sleep 60
-            echo "❌Borramos las imágenes antiguas"
-            docker rm -v blackline-backend-api-gateway-1
-            docker rm -v blackline-backend-noticiero-api-1
-            docker rm -v blackline-backend-sorteos-api-1
             echo "✅ Traemos los cambios de GitHub"
             git pull
+            echo "🔄 Reconstruimos imágenes de Docker"
+            docker compose build --no-cache
             echo "🚀 Arrancamos el contenedor de Docker"
-            docker compose up --build -d
+            docker compose up -d
           EOF

@@ -147,4 +147,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:8000']
+ALLOWED_HOSTS = ['api-principal', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:8000', '88.223.95.55']

@@ -31,7 +31,7 @@ def route_request(request, service_name=None, id=None, **kwargs):
             'participantes_por_sorteo': 'http://sorteos-api:8003/api/sorteos/{id}/participantes/',
         },
         'POST': {
-            'usuarios': 'http://api-principal:8001/api/usuarios/registrar_User/',
+            'usuarios': 'http://api-principal:8001/api/usuarios/registrar_user/',
             'change_password': 'http://api-principal:8001/api/send-email-password-reset/',
             'facturas': 'http://api-principal:8001/api/facturas/',
             'enviar_correos_masivos': 'http://api-principal:8001/api/send-emails/',

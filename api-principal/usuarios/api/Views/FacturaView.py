@@ -32,11 +32,10 @@ class FacturaViewSet(viewsets.ModelViewSet):
 
         factura = get_object_or_404(Factura, pk=id)
         logger.debug(f'Factura encontrada: {factura.pk}')
-        factura_data = FacturaSerializer(factura).data
 
         if download:
             logger.info(f'Generando PDF para la factura {id}')
-            html_content = render_to_string('factura/factura.html', {'factura': factura_data})
+            html_content = render_to_string('factura/factura.html', {'factura': factura})
             pdf_file = HTML(string=html_content).write_pdf()
             response = HttpResponse(pdf_file, content_type='application/pdf')
             response['Content-Disposition'] = f'attachment; filename=factura_{id}.pdf'
@@ -45,11 +44,11 @@ class FacturaViewSet(viewsets.ModelViewSet):
 
         if request.accepted_renderer.format == 'html':
             logger.info(f'Respondiendo con HTML para la factura {id}')
-            return Response({'factura': factura_data}, template_name='factura/factura.html')
+            return Response({'factura': factura}, template_name='factura/factura.html')
         else:
             logger.info(f'Respondiendo con JSON para la factura {id}')
+            factura_data = FacturaSerializer(factura).data
             return Response({'factura': factura_data})
-
     def create(self, request):
         logger.info('Solicitud de creación de factura recibida.')
         serializer = self.get_serializer(data=request.data)

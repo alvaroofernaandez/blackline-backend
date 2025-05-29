@@ -176,9 +176,21 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ factura.cita.design.titulo }}</td>
-                <td>{{ factura.cita.design.duracion }} mins</td>
-                <td>{{ factura.cita.design.precio }} €</td>
+                <td>{{ factura.cita.design.titulo|default:"N/A" }}</td>
+                <td>
+                    {% if factura.cita.design.duracion %}
+                        {{ factura.cita.design.duracion }} mins
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if factura.cita.design.precio %}
+                        {{ factura.cita.design.precio }} €
+                    {% else %}
+                        0.00 €
+                    {% endif %}
+                </td>
                 <td>{{ factura.total }} €</td>
             </tr>
         </tbody>
@@ -198,5 +210,4 @@
     <p class="agradecimiento">Gracias por su confianza</p>
     <hr>
 </body>
-
 </html>

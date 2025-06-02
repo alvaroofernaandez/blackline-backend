@@ -36,7 +36,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4321",
-    "blackline-dashboard.hagalink.es"
+    "http://blackline-dashboard.hagalink.es"
+    "https://blackline-dashboard.hagalink.es",
 ]
 
 

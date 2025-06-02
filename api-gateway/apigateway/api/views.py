@@ -131,9 +131,9 @@ def route_request(request, service_name=None, id=None, **kwargs):
                 data = response.json()
 
                 if service_name == 'diseños' and metodo == 'GET':
-                    data = replace_internal_urls(data, 'http://api-principal:8001', 'http://blackline-dashboard.hagalink.es:8001')
+                    data = replace_internal_urls(data, 'http://api-principal:8001', 'http://blackline-dashboard.hagalink.es')
                 elif service_name == 'noticias' and metodo == 'GET':
-                    data = replace_internal_urls(data, 'http://noticiero-api:8002', 'http://blackline-dashboard.hagalink.es:8002')
+                    data = replace_internal_urls(data, 'http://noticiero-api:8002', 'http://blackline-dashboard.hagalink.es')
 
                 return JsonResponse(data, status=response.status_code, safe=False)
             except (UnicodeDecodeError, JSONDecodeError):

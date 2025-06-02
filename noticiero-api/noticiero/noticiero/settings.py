@@ -145,4 +145,4 @@ SIMPLE_JWT = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['noticiero-api', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:4321', 'http://localhost:8000', '88.223.95.55']
+ALLOWED_HOSTS = ['noticiero-api', 'localhost', '127.0.0.1', '0.0.0.0','http://localhost:4321', 'http://localhost:8000', '88.223.95.55', "blackline-dashboard.hagalink.es"]

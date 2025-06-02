@@ -233,7 +233,7 @@ class SendEmailWhenPasswordResetAPIView(APIView):
         token['email'] = usuario.email
         token['role'] = usuario.role
 
-        reset_url = f"http://localhost:4321/cambiar_contrasena/?token={str(token.access_token)}"
+        reset_url = f"https://blackline-tattoo.hagalink.es/cambiar_contrasena/?token={str(token.access_token)}"
 
         asunto = "Cambio de contraseña"
         mensaje = f"Para cambiar tu contraseña, haz clic en el siguiente enlace:\n{reset_url}"

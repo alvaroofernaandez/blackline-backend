@@ -7,13 +7,20 @@ from django.http import Http404
 
 from .models import Noticias
 from .serializers import NoticiasSerializer
+from .permissions import IsAdminUser, IsNormalUser
 
 logger = logging.getLogger('api')
 
 class NoticiasListCreateAPIView(APIView):
     parser_classes = [MultiPartParser, FormParser, JSONParser]
-    
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return []
+        return [IsAdminUser()]
+
     def get(self, request):
+
         logger.info("Solicitud GET recibida para listar noticias")
         noticias = Noticias.objects()
         serializer = NoticiasSerializer(noticias, many=True, context={'request': request})
@@ -37,7 +44,12 @@ class NoticiasListCreateAPIView(APIView):
 
 class NoticiasDetailAPIView(APIView):
     parser_classes = [MultiPartParser, FormParser, JSONParser]
-    
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return []
+        return [IsAdminUser()]
+
     def get_object(self, id):
         try:
             logger.debug(f"Buscando noticia con id {id}")

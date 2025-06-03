@@ -11,8 +11,8 @@ class SimpleUser:
     def get(self, key, default=None):
         return self.payload.get(key, default)
 
+
 class CustomJWTAuthentication(JWTAuthentication):
-    
+
     def get_user(self, validated_token):
         return SimpleUser(validated_token)
-

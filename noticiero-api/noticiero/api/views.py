@@ -11,7 +11,7 @@ from .serializers import NoticiasSerializer
 logger = logging.getLogger('api')
 
 class NoticiasListCreateAPIView(APIView):
-    parser_classes = [MultiPartParser, FormParser, JSONParser]  # Permitir archivos
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
     
     def get(self, request):
         logger.info("Solicitud GET recibida para listar noticias")
@@ -70,6 +70,6 @@ class NoticiasDetailAPIView(APIView):
     def delete(self, request, id):
         logger.info(f"Solicitud DELETE recibida para noticia con id {id}")
         noticia = self.get_object(id)
-        noticia.delete()  # Esto también eliminará el archivo físico
+        noticia.delete() 
         logger.info(f"Noticia con id {id} eliminada exitosamente")
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -8,6 +8,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from ..Models.DiseñoModel import Design
 from ..permissions import IsAdminUser, IsNormalUser
 from ..Serializers.DiseñoSerializer import DiseñoSerializer
+from ..permissions import IsAdminUser, IsNormalUser
 
 logger = logging.getLogger('api')
 
@@ -15,6 +16,7 @@ class DiseñoView(viewsets.ModelViewSet):
     queryset = Design.objects.all()
     serializer_class = DiseñoSerializer
     parser_classes = (MultiPartParser, FormParser, JSONParser)
+    permission_classes = [IsAdminUser, IsNormalUser]
 
     def list(self, request, *args, **kwargs):
         logger.info("Listando todos los diseños")

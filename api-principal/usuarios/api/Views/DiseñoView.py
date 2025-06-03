@@ -18,6 +18,11 @@ class DiseñoView(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     permission_classes = [IsAdminUser, IsNormalUser]
 
+    def get_permissions(self):
+        if self.action == 'list':
+            return []
+        return super().get_permissions()
+
     def list(self, request, *args, **kwargs):
         logger.info("Listando todos los diseños")
         return super().list(request, *args, **kwargs)
